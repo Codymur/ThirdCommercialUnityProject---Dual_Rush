@@ -1,2 +1,147 @@
-# ThirdCommercialUnityProject
-Fast-paced, momentum-driven rogue-lite FPS featuring a card-driven upgrade system with chaotic dual-wielding gunplay and a color-dithering, cel-shaded aesthetic. Built with C# and Unity URP.
+<div align="center">
+
+# Third Commercial
+
+**Momentum-driven rogue-lite FPS featuring dual-wielding and card-driven upgrades in a dithered, cel-shaded style. Unity URP 6**
+
+[![Unity](https://img.shields.io/badge/Unity-6000.0-black?logo=unity)](https://unity.com/)
+[![URP](https://img.shields.io/badge/Render%20Pipeline-URP-blue)](https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@latest)
+[![C#](https://img.shields.io/badge/Language-C%23-239120?logo=csharp)](https://learn.microsoft.com/en-us/dotnet/csharp/)
+[![License](https://img.shields.io/badge/License-Proprietary-red)](#license)
+
+</div>
+
+---
+
+## Overview
+
+**Third Commercial** is a fast-paced, first-person roguelite shooter where each run challenges the player through an escalating cycle of combat rooms, enemy encounters, and permanent perk decisions. No two runs are the same — difficulty scales continuously and every perk choice compounds into a distinct playstyle.
+
+---
+
+## Core Gameplay Pillars
+
+### 1. Kinetic First-Person Combat
+Every weapon interaction is physically grounded. Guns produce procedural recoil with stacked displacement on rapid fire, muzzle flash, shell ejection, and pooled bullet-hole decals. The player's kick (melee) is animated via DOTween and synchronized with a raycast hit window for frame-perfect feel. Dual-wielding is supported, with each hand independently bound to a mouse button and its own recoil profile.
+
+### 2. Fluid Movement
+The movement system combines standard FPS locomotion with a dedicated dive mechanic. Diving applies a physics impulse, temporarily reshapes the collider, modifies air control, and triggers a landing slide — all coordinated through a coroutine pipeline. Every action feeds procedural camera effects (FOV kick, pitch offset, lateral tilt) to maximize physical presence.
+
+### 3. Escalating Roguelite Loop
+Runs are structured as infinite batches of **6 rooms**: 4 Normal → 1 Mini-Boss → 1 Perk. Difficulty is tied to the absolute room index across the entire run, so combat pressure never resets. After each Mini-Boss room, the player selects a perk that persists for the rest of the run, making every decision consequential.
+
+### 4. Reactive Enemy Archetypes
+All enemies share a common state machine (Idle → Alert → Attack) via `EnemyBase`. Two distinct archetypes create combat variety:
+- **Rusher** — High-HP melee enemy that charges after a telegraphed windup
+- **Shooter** — Ranged enemy that strafes laterally, fires bursts, and backs away when the player closes distance
+
+---
+
+## Technical Stack
+
+| Layer | Technology |
+|---|---|
+| Engine | Unity 6000.0 |
+| Render Pipeline | Universal Render Pipeline (URP) |
+| Scripting | C# / .NET Standard 2.1 |
+| Physics | Unity PhysX — raycasts, sphere casts, ragdoll rigidbodies |
+| Animation | Mecanim + DOTween procedural animation |
+| Tweening | DOTween (Demigiant) |
+| VFX | Cartoon FX Remaster (JMO Assets) |
+| Audio | Custom audio manager + Weapons of Choice FREE |
+| Outlining | QuickOutline |
+| Post-Processing | URP Volume stack + custom dithering shaders |
+
+---
+
+## Architecture
+
+```
+Assets/Scripts/
+├── Guns/                          # Weapon systems
+│   ├── GunController.cs           # Raycast shooting, pooled decals, muzzle flash
+│   ├── WeaponRecoil.cs            # Procedural positional & rotational recoil
+│   ├── DualPistolManager.cs       # Dual-wield pistol coordination
+│   ├── GunWallAvoidance.cs        # Prevents clipping into geometry
+│   └── Sway.cs                    # Weapon sway on look input
+│
+├── Player/                        # Player systems
+│   ├── PlayerMovementTutorial.cs  # Core locomotion, footsteps, ground detection
+│   ├── PlayerDive.cs              # Dive impulse, collider reshape, landing slide
+│   ├── KickSystem.cs              # Melee kick with DOTween animation sync
+│   ├── ItemPickupManager.cs       # Dual hand-slot pickup & drop system
+│   ├── PlayerHealth.cs            # HP, i-frames, damage flash, death reload
+│   └── PlayerCam.cs               # Procedural FOV, tilt, and pitch effects
+│
+├── LevelManagement/               # Run & room systems
+│   ├── RunManager.cs              # Singleton — run state, room index, difficulty
+│   ├── RoomManager.cs             # Room batch instantiation & deferred destruction
+│   ├── Room.cs                    # Enemy spawning, door lock/unlock, perk triggers
+│   ├── PassageTrigger.cs          # Corridor trigger for room transitions
+│   └── Door.cs                    # Door open/close state
+│
+├── PerkSystem/                    # Roguelite progression
+│   ├── PerkSO.cs                  # ScriptableObject — stat modifier data
+│   ├── PerkManager.cs             # Singleton — stacks perks, recalculates stats
+│   ├── PerkSelectionUI.cs         # In-run perk selection screen
+│   └── PerkCardUI.cs              # Individual perk card rendering
+│
+└── Target/                        # Health & enemy logic
+    ├── Target.cs                  # Base damageable class
+    ├── EnemyBase.cs               # Abstract enemy — state machine, detection, ragdoll
+    ├── RusherEnemy.cs             # Melee charger archetype
+    └── ShooterEnemy.cs            # Ranged strafe-and-fire archetype
+```
+
+---
+
+## Room Batching & Difficulty
+
+Rooms are loaded and destroyed in batches to maintain seamless world continuity. Destruction is **deferred** — a room is only unloaded after the player has physically entered the next one, preventing visible gaps or falling through the world.
+
+Difficulty is a direct function of the **global room index** and never resets between batches:
+
+```
+Difficulty = CurrentRoomIndex + 1
+```
+
+Enemy counts and spawn configurations grow continuously across the entire run, not just within a single batch.
+
+---
+
+## Perk System
+
+Perks are defined as `ScriptableObject` assets (`PerkSO`) and carry the following modifier categories:
+
+| Modifier | Stack Method |
+|---|---|
+| Movement Speed | Additive |
+| Jump Force | Additive |
+| Damage | Multiplicative |
+| Dive Cooldown | Multiplicative |
+| Health Regen on Kill | Additive |
+
+`PerkManager` recalculates all derived stats and pushes them to the relevant components whenever a new perk is added.
+
+---
+
+## Prerequisites
+
+- **Unity 6000.0** or later
+- **Universal Render Pipeline** package
+- **DOTween** (included under `Assets/Plugins/Demigiant`)
+
+---
+
+## Getting Started
+
+1. Clone the repository
+2. Open the project in **Unity 6000.0+**
+3. Open `Assets/Scenes/LevelTest.unity`
+4. Press **Play**
+
+---
+
+## License
+
+This project is proprietary. All rights reserved. No part of this codebase may be reproduced, distributed, or used without explicit written permission from the author.
