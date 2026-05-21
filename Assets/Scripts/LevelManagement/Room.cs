@@ -23,9 +23,6 @@ public class Room : MonoBehaviour
     [Header("Perk Trigger")]
     public GameObject perkTriggerObject;
 
-    [Header("Activation")]
-    public bool autoActivateOnSpawn = true;
-
     public event Action OnRoomCleared;
     public event Action OnPlayerExited;
 
@@ -63,9 +60,9 @@ public class Room : MonoBehaviour
 
         switch (roomType)
         {
-            case RoomType.Normal:   SpawnNormalEnemies(difficulty); break;
+            case RoomType.Normal: SpawnNormalEnemies(difficulty); break;
             case RoomType.MiniBoss: SpawnMiniBoss(); break;
-            case RoomType.Boss:     SpawnBoss(); break;
+            case RoomType.Boss: SpawnBoss(); break;
         }
     }
 
@@ -104,8 +101,6 @@ public class Room : MonoBehaviour
         {
             aliveEnemies.Add(enemy);
             enemy.OnDeath += HandleEnemyDeath;
-            if (autoActivateOnSpawn)
-                enemy.Activate();
         }
     }
 
@@ -134,27 +129,38 @@ public class Room : MonoBehaviour
         OnPlayerExited?.Invoke();
     }
 
+    /// <summary>
+    /// Called by <see cref="EnemyActivationTrigger"/> when the player enters the room's
+    /// ActivateEnemies trigger collider. All alive enemies transition from forced Idle to
+    /// active detection and can now attack.
+    /// </summary>
+    public void ActivateEnemies()
+    {
+        foreach (EnemyBase enemy in aliveEnemies)
+        {
+            if (enemy != null)
+                enemy.Activate();
+        }
+
+        Debug.Log($"[Room] '{name}' enemies activated.");
+    }
+
     public void OnPerkTaken()
     {
         if (exitDoor != null)
             exitDoor.Open();
     }
 
-    /// <summary>Activates all enemies that were spawned in a dormant state.
-    /// For perk rooms, reveals the perk pickup instead.</summary>
+    /// <summary>For perk rooms, reveals the perk pickup and fires OnRoomCleared
+    /// to keep the cascade chain intact.</summary>
     public void WakeEnemies()
     {
-        if (isPerkRoom)
-        {
-            if (perkTriggerObject != null)
-                perkTriggerObject.SetActive(true);
-            // Perk rooms have no enemies — fire OnRoomCleared immediately
-            // so the cascade chain stays intact.
-            OnRoomCleared?.Invoke();
-            return;
-        }
+        if (!isPerkRoom) return;
 
-        foreach (EnemyBase enemy in aliveEnemies)
-            enemy.Activate();
+        if (perkTriggerObject != null)
+            perkTriggerObject.SetActive(true);
+        // Perk rooms have no enemies — fire OnRoomCleared immediately
+        // so the cascade chain stays intact.
+        OnRoomCleared?.Invoke();
     }
 }

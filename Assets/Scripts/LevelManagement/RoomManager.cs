@@ -160,10 +160,9 @@ public class RoomManager : MonoBehaviour
             }
         }
 
-        // Initialise: slot 0 activates immediately; the rest spawn dormant.
-        InitialiseRoom(0, autoActivate: true);
-        for (int i = 1; i < RoomSlots; i++)
-            InitialiseRoom(i, autoActivate: false);
+        // Initialise all rooms — all spawn active immediately.
+        for (int i = 0; i < RoomSlots; i++)
+            InitialiseRoom(i);
 
         activeSlot = 0;
     }
@@ -225,7 +224,7 @@ public class RoomManager : MonoBehaviour
     void HandleRoomCleared(int slotIndex)
     {
         // For normal/mini-boss rooms the exit door is opened directly by Room itself.
-        // Wake enemies in the next slot so they are ready when the player arrives.
+        // Reveal perk pickup in the next perk room if applicable.
         int nextSlot = slotIndex + 1;
         if (nextSlot < RoomSlots && rooms[nextSlot] != null)
             rooms[nextSlot].WakeEnemies();
@@ -253,13 +252,12 @@ public class RoomManager : MonoBehaviour
     // Helpers
     // ──────────────────────────────────────────────────────────────────────────
 
-    void InitialiseRoom(int slotIndex, bool autoActivate)
+    void InitialiseRoom(int slotIndex)
     {
         Room room = rooms[slotIndex];
         if (room == null) return;
 
         int absoluteIndex = RunManager.Instance.CurrentRoomIndex + slotIndex;
-        room.autoActivateOnSpawn = autoActivate;
         room.Initialise(
             RunManager.Instance.GetRoomType(absoluteIndex),
             RunManager.Instance.GetDifficulty(absoluteIndex)
@@ -270,7 +268,7 @@ public class RoomManager : MonoBehaviour
         int capturedSlot = slotIndex;
         room.OnPlayerExited += () => HandlePlayerExited(capturedSlot);
 
-        // Cascade: wake next room's enemies when this room is cleared.
+        // Cascade: reveal perk pickup in the next room when this room is cleared.
         if (slotIndex < RoomSlots - 1)
             room.OnRoomCleared += () => HandleRoomCleared(slotIndex);
     }

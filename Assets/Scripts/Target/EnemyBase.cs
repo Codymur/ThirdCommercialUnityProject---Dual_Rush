@@ -25,13 +25,16 @@ public class EnemyBase : Target
     protected Rigidbody rb;
     protected CapsuleCollider col;
     protected bool isDead = false;
-    protected bool isActivated = false;
 
     public event Action<EnemyBase> OnDeath;
 
     // ?? State ??????????????????????????????????????????????????????
     public enum EnemyState { Idle, Alert, Attack }
     protected EnemyState state = EnemyState.Idle;
+
+    // Whether this enemy's room has been entered by the player.
+    // Enemies stay in Idle and cannot attack until this is true.
+    private bool isActivated = false;
 
     // ?? Events � hook score system / perk triggers later ???????????
     public System.Action<EnemyBase> OnEnemyDeath;
@@ -57,17 +60,17 @@ public class EnemyBase : Target
         }
     }
 
-    // ??????????????????????????????????????????????????????????????
+    // ──────────────────────────────────────────────────────────────────────────
     protected virtual void Update()
     {
-        if (!isActivated || isDead || player == null) return;
+        if (isDead || player == null || !isActivated) return;
 
         float distToPlayer = Vector3.Distance(transform.position, player.position);
 
         switch (state)
         {
             case EnemyState.Idle:
-                if (distToPlayer <= detectionRange)
+                if ( distToPlayer <= detectionRange)
                     state = EnemyState.Alert;
                 break;
 
@@ -134,6 +137,13 @@ public class EnemyBase : Target
 
     public bool IsDead => isDead;
 
-    /// <summary>Activates this enemy's AI, allowing the state machine to run.</summary>
-    public void Activate() { isActivated = true; }
+    /// <summary>
+    /// Called by <see cref="Room.ActivateEnemies"/> when the player enters the room trigger.
+    /// Until this is called the enemy stays permanently in Idle and will not detect or attack.
+    /// </summary>
+    public void Activate()
+    {
+        isActivated = true;
+    }
+
 }
