@@ -7,6 +7,9 @@
 [![Unity](https://img.shields.io/badge/Unity-6000.0-black?logo=unity)](https://unity.com/)
 [![URP](https://img.shields.io/badge/Render%20Pipeline-URP-blue)](https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@latest)
 [![C#](https://img.shields.io/badge/Language-C%23-239120?logo=csharp)](https://learn.microsoft.com/en-us/dotnet/csharp/)
+[![Blender](https://img.shields.io/badge/Blender-F5792A?logo=blender&logoColor=white)](https://www.blender.org/)
+[![Photoshop](https://img.shields.io/badge/Photoshop-31A8FF?logo=adobephotoshop&logoColor=white)](https://www.adobe.com/products/photoshop.html)
+[![Audacity](https://img.shields.io/badge/Audacity-0000CC?logo=audacity&logoColor=white)](https://www.audacityteam.org/)
 [![License](https://img.shields.io/badge/License-Proprietary-red)](#license)
 
 </div>
@@ -45,10 +48,12 @@ All enemies share a common state machine (Idle → Alert → Attack) via `EnemyB
 | Render Pipeline | Universal Render Pipeline (URP) |
 | Scripting | C# / .NET Standard 2.1 |
 | Physics | Unity PhysX — raycasts, sphere casts, ragdoll rigidbodies |
+| 3D Modeling | Blender |
+| 2D Art & Textures | Adobe Photoshop |
 | Animation | Mecanim + DOTween procedural animation |
 | Tweening | DOTween (Demigiant) |
 | VFX | Cartoon FX Remaster (JMO Assets) |
-| Audio | Custom audio manager + Weapons of Choice FREE |
+| Audio | Custom audio manager + Weapons of Choice FREE + Audacity|
 | Outlining | QuickOutline |
 | Post-Processing | URP Volume stack + custom dithering shaders |
 
