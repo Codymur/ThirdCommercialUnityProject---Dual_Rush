@@ -70,6 +70,11 @@ public class KickSystem : MonoBehaviour
     public float kickPitchMin = 0.9f;
     public float kickPitchMax = 1.1f;
 
+    // ── Kickable Layers ──────────────────────────────────────────────────────
+    [Header("Kickable Layers")]
+    [Tooltip("Only objects on these layers can be hit by the kick raycast.")]
+    public LayerMask kickableLayers = Physics.AllLayers;
+
     // ── References ───────────────────────────────────────────────────────────
     [Header("References")]
     public Camera fpsCam;
@@ -118,8 +123,9 @@ public class KickSystem : MonoBehaviour
         yield return new WaitForSeconds(kickHitDelay);
 
         RaycastHit hit;
-        if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hit, kickRange))
+        if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hit, kickRange, kickableLayers))
         {
+            Debug.Log(hit.transform.gameObject.name);
             ApplyDamage(hit);
             ApplyForce(hit);
             PlayKickSound(kickHitSoundClips, ref lastHitSoundIndex);

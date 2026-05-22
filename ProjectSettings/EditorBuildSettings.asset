@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: 5142ae33681ba7841ada9eac2f09a171
   - enabled: 1
-    path: Assets/Scenes/LevelTest.unity
-    guid: 953483c2ee75e074c8407df3b42d108d
+    path: Assets/Scenes/EnemyTesting.unity
+    guid: b86d75b08e9d3a34580f3cc43244c56f
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0
