@@ -36312,7 +36312,6 @@ MonoBehaviour:
   miniBossPrefab: {fileID: 0}
   bossPrefab: {fileID: 0}
   perkTriggerObject: {fileID: 8974048243231983883}
-  autoActivateOnSpawn: 1
 --- !u!1 &8974048243231983883
 GameObject:
   m_ObjectHideFlags: 0
@@ -36556,3 +36555,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   passageTrigger: {fileID: 1756710375554371604}
+  lingerLerpDuration: 0.25

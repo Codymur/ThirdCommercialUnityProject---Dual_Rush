@@ -15,6 +15,10 @@ public class RoomManager : MonoBehaviour
     [Header("First Room")]
     public Transform firstRoomExitAnchor;
 
+    [Header("Door Settings")]
+    [Tooltip("How long the exit door lingers in the world after its room is destroyed (seconds).")]
+    public float doorLingerDuration = 3f;
+
     // One full cycle = 4 normal + 1 mini-boss + 1 perk.
     private const int RoomSlots = 6;
 
@@ -98,11 +102,11 @@ public class RoomManager : MonoBehaviour
     IEnumerator DestroyPreviousRoomRoutine(GameObject instance)
     {
         yield return null; // Wait one frame so the player is fully inside the new room.
-        if (instance != null)
-        {
-            Debug.Log($"[RoomManager] Destroying previous room '{instance.name}'.");
-            Destroy(instance);
-        }
+        if (instance == null) yield break;
+
+        Debug.Log($"[RoomManager] Destroying previous room '{instance.name}'.");
+        DetachAndLingerDoor(instance);
+        Destroy(instance);
     }
 
     // ──────────────────────────────────────────────────────────────────────────
@@ -188,6 +192,7 @@ public class RoomManager : MonoBehaviour
         {
             if (roomInstances[i] != null)
             {
+                DetachAndLingerDoor(roomInstances[i]);
                 Destroy(roomInstances[i]);
                 roomInstances[i] = null;
                 rooms[i] = null;
@@ -195,6 +200,7 @@ public class RoomManager : MonoBehaviour
         }
         if (pendingDestroyInstance != null)
         {
+            DetachAndLingerDoor(pendingDestroyInstance);
             Destroy(pendingDestroyInstance);
             pendingDestroyInstance = null;
             pendingDestroySlot = -1;
@@ -303,5 +309,26 @@ public class RoomManager : MonoBehaviour
                 ? normalRoomPrefabs[Random.Range(0, normalRoomPrefabs.Length)]
                 : null,
         };
+    }
+
+    /// <summary>
+    /// Detaches the room's exit door frame (the parent of the Door component) so it
+    /// survives the room's destruction, then schedules its own cleanup after
+    /// <see cref="doorLingerDuration"/> seconds.
+    /// </summary>
+    void DetachAndLingerDoor(GameObject roomInstance)
+    {
+        Room room = roomInstance.GetComponent<Room>();
+        if (room == null || room.exitDoor == null) return;
+
+        // ExitDoor (frame) is the direct parent of DoorObject (Door component).
+        // Detach the frame so both the door and its surround survive room destruction.
+        Transform doorRoot = room.exitDoor.transform.parent != null
+            ? room.exitDoor.transform.parent
+            : room.exitDoor.transform;
+
+        doorRoot.SetParent(null, worldPositionStays: true);
+        room.exitDoor.LerpZToZero();
+        Destroy(doorRoot.gameObject, doorLingerDuration);
     }
 }

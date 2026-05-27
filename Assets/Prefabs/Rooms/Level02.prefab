@@ -75572,6 +75572,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   passageTrigger: {fileID: 1756710375554371604}
+  lingerLerpDuration: 0.25
 --- !u!54 &8713485101630052713
 Rigidbody:
   m_ObjectHideFlags: 0
