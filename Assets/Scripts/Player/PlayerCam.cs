@@ -92,12 +92,32 @@ public class PlayerCam : MonoBehaviour
     private bool wasGrounded = true;
     private float previousYVel;
 
+    private const string SensitivityKey = "MouseSensitivity";
+    private const float DefaultSensitivity = 300f;
+    private const string InvertXKey = "InvertX";
+    private const string InvertYKey = "InvertY";
+
+    private bool invertX;
+    private bool invertY;
+
     // ?????????????????????????????????????????????
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         bobOriginLocalPos = transform.localPosition;
+        LoadSensitivity();
+    }
+
+    /// <summary>Reads mouse sensitivity and invert flags from PlayerPrefs and applies them.</summary>
+    public void LoadSensitivity()
+    {
+        float saved = PlayerPrefs.GetFloat(SensitivityKey, DefaultSensitivity);
+        sensX = saved;
+        sensY = saved;
+
+        invertX = PlayerPrefs.GetInt(InvertXKey, 0) == 1;
+        invertY = PlayerPrefs.GetInt(InvertYKey, 0) == 1;
     }
 
     private void Update()
@@ -111,6 +131,9 @@ public class PlayerCam : MonoBehaviour
     {
         float mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * sensX;
         float mouseY = Input.GetAxisRaw("Mouse Y") * Time.deltaTime * sensY;
+
+        if (invertX) mouseX = -mouseX;
+        if (invertY) mouseY = -mouseY;
 
         yRotation += mouseX;
         xRotation -= mouseY;

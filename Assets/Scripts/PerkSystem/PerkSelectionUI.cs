@@ -29,6 +29,8 @@ public class PerkSelectionUI : MonoBehaviour
 
     private Action onPerkChosen;
 
+    public bool PerkChoosing = false;
+
     private void Awake()
     {
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
@@ -65,6 +67,8 @@ public class PerkSelectionUI : MonoBehaviour
         panelRoot.SetActive(true);
         SetCursorState(true);
 
+        PerkChoosing = true;
+
         // Pause gameplay time so enemies don't move while choosing.
         Time.timeScale = 0f;
     }
@@ -74,6 +78,7 @@ public class PerkSelectionUI : MonoBehaviour
         if (panelRoot != null) panelRoot.SetActive(false);
         SetCursorState(false);
         Time.timeScale = 1f;
+        PerkChoosing = false;
     }
 
     private void OnCardClicked(PerkSO perk)

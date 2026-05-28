@@ -65,6 +65,8 @@ public class GunController : MonoBehaviour
     private readonly Queue<GameObject> _impactPool = new Queue<GameObject>();
     private Transform _impactPoolParent;
 
+    public PerkSelectionUI PerkSelectionUIScript;
+
     private void Awake()
     {
         Transform root = transform.root;
@@ -113,12 +115,12 @@ public class GunController : MonoBehaviour
         if (transform.parent == null) return;
         if (Time.time - pickupTime < pickupShootDelay) return;
 
-        if (LeftHanded && Input.GetMouseButton(0) && Time.time >= nextTimeToFire)
+        if (LeftHanded && Input.GetMouseButton(0) && Time.time >= nextTimeToFire && !PerkSelectionUIScript.PerkChoosing)
         {
             nextTimeToFire = Time.time + 1f / fireRate;
             Shoot();
         }
-        else if (RightHanded && Input.GetMouseButton(1) && Time.time >= nextTimeToFire)
+        else if (RightHanded && Input.GetMouseButton(1) && Time.time >= nextTimeToFire && !PerkSelectionUIScript.PerkChoosing)
         {
             nextTimeToFire = Time.time + 1f / fireRate;
             Shoot();

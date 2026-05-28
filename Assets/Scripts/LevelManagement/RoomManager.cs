@@ -68,8 +68,9 @@ public class RoomManager : MonoBehaviour
     public void ShiftRoom()
     {
         // activeSlot was already incremented by HandlePlayerExited before
-        // AdvanceRoom→ShiftRoom is called, so activeSlot-1 is the exited room.
-        int exitedSlot = activeSlot - 1;
+        // AdvanceRoom→ShiftRoom is called, so activeSlot-1 is the exited room
+        // and activeSlot-2 is the room before it — the one we want to destroy.
+        int exitedSlot = activeSlot - 2;
         if (exitedSlot >= 0 && exitedSlot < RoomSlots)
         {
             pendingDestroyInstance = roomInstances[exitedSlot];
