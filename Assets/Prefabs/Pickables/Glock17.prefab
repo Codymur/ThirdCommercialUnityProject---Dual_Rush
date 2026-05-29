@@ -230,9 +230,9 @@ MonoBehaviour:
   FPScam: {fileID: 0}
   CameraRecoilScript: {fileID: 0}
   DecalBulletHole: {fileID: 4726639939110395007, guid: f47aa56a2aec7934797dc0685cad7674, type: 3}
+  impactEffect: {fileID: 1067471869909948, guid: f70beae9db4534140b6d54697cfbfa53, type: 3}
   itsPistol: 1
   itsUzi: 0
-  impactEffect: {fileID: 1067471869909948, guid: f70beae9db4534140b6d54697cfbfa53, type: 3}
   muzzleFlash: {fileID: 3548655102967066925}
   GunAnimator: {fileID: 8546121008235887787}
   LeftHanded: 0
@@ -252,6 +252,10 @@ MonoBehaviour:
   shootableLayers:
     serializedVersion: 2
     m_Bits: 36929
+  decalPoolSize: 20
+  decalLifetime: 60
+  impactPoolSize: 10
+  PerkSelectionUIScript: {fileID: 0}
 --- !u!54 &7896353765598102820
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -370,7 +374,7 @@ AudioSource:
   m_GameObject: {fileID: 5258306775529345060}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: -7381815075516591308, guid: eebd11dac079f5e41bc37836dafeb0e5, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1

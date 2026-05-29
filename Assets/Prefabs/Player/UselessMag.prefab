@@ -191,3 +191,4 @@ MonoBehaviour:
   volumeMax: 0.7
   pitchMin: 0.9
   pitchMax: 1.2
+  outputMixerGroup: {fileID: -7381815075516591308, guid: eebd11dac079f5e41bc37836dafeb0e5, type: 2}

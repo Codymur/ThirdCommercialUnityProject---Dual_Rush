@@ -3751,6 +3751,8 @@ MonoBehaviour:
   diveVolumeMax: 1
   divePitchMin: 0.95
   divePitchMax: 1.05
+  cooldownImage: {fileID: 0}
+  coolDownImageBackGround: {fileID: 0}
   movementScript: {fileID: 5069843338626044332}
   orientation: {fileID: 4203195621401552829}
   cameraController: {fileID: 4749965531256907564}
@@ -3763,7 +3765,7 @@ AudioSource:
   m_GameObject: {fileID: 5981349861344004023}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: -7381815075516591308, guid: eebd11dac079f5e41bc37836dafeb0e5, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
@@ -3860,7 +3862,7 @@ AudioSource:
   m_GameObject: {fileID: 5981349861344004023}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: -7381815075516591308, guid: eebd11dac079f5e41bc37836dafeb0e5, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
@@ -3957,7 +3959,7 @@ AudioSource:
   m_GameObject: {fileID: 5981349861344004023}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: -7381815075516591308, guid: eebd11dac079f5e41bc37836dafeb0e5, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
@@ -4085,6 +4087,9 @@ MonoBehaviour:
   kickVolumeMax: 1
   kickPitchMin: 0.9
   kickPitchMax: 1.1
+  kickableLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
   fpsCam: {fileID: 6713987466303812633}
   playerCam: {fileID: 4749965531256907564}
 --- !u!82 &6455445801748059953
@@ -4096,7 +4101,7 @@ AudioSource:
   m_GameObject: {fileID: 5981349861344004023}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: -7381815075516591308, guid: eebd11dac079f5e41bc37836dafeb0e5, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1

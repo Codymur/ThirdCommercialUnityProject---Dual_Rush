@@ -17,10 +17,14 @@ public class MainMenuUI : MonoBehaviour
     private const string FullscreenKey   = "Fullscreen";
     private const string QualityKey      = "QualityIndex";
     private const string TextureKey      = "TextureLimit";
+    private const string MasterVolumeKey = "MasterVolume";
+    private const string SFXVolumeKey    = "SFXVolume";
+    private const string MusicVolumeKey  = "MusicVolume";
 
     private const float DefaultSensitivity = 300f;
     private const float MinSensitivity     = 50f;
     private const float MaxSensitivity     = 1000f;
+    private const float DefaultVolume      = 0.75f;
 
     // ── Panels ────────────────────────────────────────────────────────────────
     [Header("Panels")]
@@ -29,6 +33,10 @@ public class MainMenuUI : MonoBehaviour
 
     [Tooltip("The settings panel to show when Options is clicked.")]
     public GameObject settingsPanel;
+
+    public GameObject GameplayPanel;
+    public GameObject AudioPanel;
+    public GameObject DisplayPanel;
 
     // ── Sensitivity ───────────────────────────────────────────────────────────
     [Header("Sensitivity")]
@@ -50,6 +58,12 @@ public class MainMenuUI : MonoBehaviour
     public TMP_Dropdown qualityDropdown;
     public TMP_Dropdown textureDropdown;
 
+    // ── Audio ─────────────────────────────────────────────────────────────────
+    [Header("Audio")]
+    public Slider masterVolumeSlider;
+    public Slider sfxVolumeSlider;
+    public Slider musicVolumeSlider;
+
     // ── Internal state ────────────────────────────────────────────────────────
     private Resolution[] _resolutions;
 
@@ -57,7 +71,14 @@ public class MainMenuUI : MonoBehaviour
     private void Start()
     {
         if (settingsPanel != null)
+        {
             settingsPanel.SetActive(false);
+            GameplayPanel.SetActive(false);
+            AudioPanel.SetActive(false);
+            DisplayPanel.SetActive(true);
+        }
+            
+
 
         InitializeSensitivity();
         InitializeInvertToggles();
@@ -65,9 +86,31 @@ public class MainMenuUI : MonoBehaviour
         InitializeFullscreen();
         InitializeQuality();
         InitializeTexture();
+        InitializeAudio();
     }
 
     // ── Public API ────────────────────────────────────────────────────────────
+
+    public void GameplayPanelActivate()
+    {
+        GameplayPanel.SetActive(true);
+        AudioPanel.SetActive(false);
+        DisplayPanel.SetActive(false);
+    }
+
+    public void AudioPanelActivate()
+    {
+        GameplayPanel.SetActive(false);
+        AudioPanel.SetActive(true);
+        DisplayPanel.SetActive(false);
+    }
+
+    public void DisplayPanelActivate()
+    {
+        GameplayPanel.SetActive(false);
+        AudioPanel.SetActive(false);
+        DisplayPanel.SetActive(true);
+    }
 
     /// <summary>Shows the settings panel and hides the main buttons.</summary>
     public void OpenSettings()
@@ -254,4 +297,31 @@ public class MainMenuUI : MonoBehaviour
         PlayerPrefs.SetInt(TextureKey, index);
         PlayerPrefs.Save();
     }
+
+    // ── Audio ─────────────────────────────────────────────────────────────────
+
+    /// <summary>Loads saved volume preferences and registers slider listeners.</summary>
+    private void InitializeAudio()
+    {
+        if (AudioManager.Instance == null) return;
+
+        SetupVolumeSlider(masterVolumeSlider, MasterVolumeKey, OnMasterVolumeChanged);
+        SetupVolumeSlider(sfxVolumeSlider,    SFXVolumeKey,    OnSFXVolumeChanged);
+        SetupVolumeSlider(musicVolumeSlider,  MusicVolumeKey,  OnMusicVolumeChanged);
+    }
+
+    private void SetupVolumeSlider(Slider slider, string prefsKey, UnityEngine.Events.UnityAction<float> onChange)
+    {
+        if (slider == null) return;
+
+        slider.minValue = 0f;
+        slider.maxValue = 1f;
+        slider.value    = PlayerPrefs.GetFloat(prefsKey, DefaultVolume);
+        slider.onValueChanged.AddListener(onChange);
+        onChange(slider.value);
+    }
+
+    private void OnMasterVolumeChanged(float value) => AudioManager.Instance?.SetMasterVolume(value);
+    private void OnSFXVolumeChanged(float value)    => AudioManager.Instance?.SetSFXVolume(value);
+    private void OnMusicVolumeChanged(float value)  => AudioManager.Instance?.SetMusicVolume(value);
 }
