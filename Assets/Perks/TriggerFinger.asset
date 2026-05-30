@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1a0696402d7bf8e4480c9006890a2089, type: 3}
-  m_Name: Killer
+  m_Name: TriggerFinger
   m_EditorClassIdentifier: 
-  perkName: Killer
-  description: Damaging 25% more
-  icon: {fileID: 21300000, guid: 07caf3d1930bab14aa8f6dcdf2db871a, type: 3}
+  perkName: Trigger Finger
+  description: Fire rate of weapons get 10% increase
+  icon: {fileID: 21300000, guid: f446ceac60ed41a42bf4e1669eb8beb0, type: 3}
   category: 1
   moveSpeedAdd: 0
   jumpForceAdd: 0
   diveCooldownMult: 1
-  damageMult: 1.25
+  damageMult: 1
   healthRegenOnKill: 0
-  fireRateMult: 1
+  fireRateMult: 1.1
   damageTakenMult: 1

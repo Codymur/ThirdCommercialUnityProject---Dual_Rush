@@ -23,7 +23,7 @@ public class PlayerHealth : Target
     public float respawnDelay = 2f;
 
     [Header("UI")]
-    [Tooltip("Optional health bar — fill image, 0 to 1.")]
+    [Tooltip("Optional health bar ï¿½ fill image, 0 to 1.")]
     public Image healthBarFill;
     [Tooltip("Optional health text label.")]
     public Text healthText;
@@ -59,6 +59,9 @@ public class PlayerHealth : Target
     {
         if (isInvincible) return;
 
+        PerkManager pm = PerkManager.Instance;
+        if (pm != null) amount *= pm.DamageTakenMult;
+
         health -= amount;
         health = Mathf.Max(health, 0f);
 
@@ -69,6 +72,14 @@ public class PlayerHealth : Target
             Die(hitDirection);
         else
             StartCoroutine(InvincibilityCoroutine());
+    }
+
+    /// <summary>Restores health by amount, clamped to maxHealth. Has no effect when dead.</summary>
+    public void Heal(float amount)
+    {
+        if (IsDead) return;
+        health = Mathf.Min(health + amount, maxHealth);
+        UpdateHealthUI();
     }
 
     protected override void Die(Vector3 hitDirection)

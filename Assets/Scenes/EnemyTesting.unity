@@ -9971,6 +9971,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a22d6e6f95957ef409bf00b08ab89177, type: 2}
   - {fileID: 11400000, guid: 42c9feec10573994e8c51ce554f5a7eb, type: 2}
   - {fileID: 11400000, guid: 77eaf667235727d42b544bd443aecc90, type: 2}
+  - {fileID: 11400000, guid: fb4efcf97a01f764bab0084b9bd9fd5f, type: 2}
+  - {fileID: 11400000, guid: 1320af5de38cad74ea07cdd8925fa5f2, type: 2}
   panelRoot: {fileID: 1029454263}
   dismissButton: {fileID: 745654743}
   PerkChoosing: 0

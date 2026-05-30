@@ -96,6 +96,8 @@ public class PlayerCam : MonoBehaviour
     private const float DefaultSensitivity = 300f;
     private const string InvertXKey = "InvertX";
     private const string InvertYKey = "InvertY";
+    private const string FovKey = "FieldOfView";
+    private const float DefaultFov = 90f;
 
     private bool invertX;
     private bool invertY;
@@ -107,6 +109,7 @@ public class PlayerCam : MonoBehaviour
         Cursor.visible = false;
         bobOriginLocalPos = transform.localPosition;
         LoadSensitivity();
+        LoadFov();
     }
 
     /// <summary>Reads mouse sensitivity and invert flags from PlayerPrefs and applies them.</summary>
@@ -118,6 +121,16 @@ public class PlayerCam : MonoBehaviour
 
         invertX = PlayerPrefs.GetInt(InvertXKey, 0) == 1;
         invertY = PlayerPrefs.GetInt(InvertYKey, 0) == 1;
+    }
+
+    /// <summary>Reads the saved field of view from PlayerPrefs and applies it to the camera and baseFov.</summary>
+    public void LoadFov()
+    {
+        float savedFov = PlayerPrefs.GetFloat(FovKey, DefaultFov);
+        baseFov = savedFov;
+        Camera cam = GetComponent<Camera>();
+        if (cam != null)
+            cam.fieldOfView = savedFov;
     }
 
     private void Update()

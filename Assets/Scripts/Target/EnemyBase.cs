@@ -93,8 +93,12 @@ public class EnemyBase : Target
         isDead = true;
 
         OnEnemyDeath?.Invoke(this);
-
         OnDeath?.Invoke(this);
+
+        // Trigger Regeneration perk
+        PerkManager pm = PerkManager.Instance;
+        if (pm != null && pm.HealthRegenOnKill > 0f)
+            pm.HealPlayer(pm.HealthRegenOnKill);
 
         agent.enabled = false;
         col.enabled = false;

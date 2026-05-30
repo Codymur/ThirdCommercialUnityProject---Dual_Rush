@@ -18,6 +18,7 @@ public class PerkManager : MonoBehaviour
 
     private PlayerMovementTutorial playerMovement;
     private PlayerDive playerDive;
+    private PlayerHealth playerHealth;
 
     // ── Derived stats (recalculated on each perk pickup) ─────────────────
     public float MoveSpeedBonus      { get; private set; }
@@ -25,6 +26,8 @@ public class PerkManager : MonoBehaviour
     public float DamageMult          { get; private set; } = 1f;
     public float DiveCooldownMult    { get; private set; } = 1f;
     public float HealthRegenOnKill   { get; private set; }
+    public float FireRateMult        { get; private set; } = 1f;
+    public float DamageTakenMult     { get; private set; } = 1f;
 
     private void Awake()
     {
@@ -37,6 +40,7 @@ public class PerkManager : MonoBehaviour
         // Cache player references — player is expected to exist in the scene.
         playerMovement = FindAnyObjectByType<PlayerMovementTutorial>();
         playerDive     = FindAnyObjectByType<PlayerDive>();
+        playerHealth   = FindAnyObjectByType<PlayerHealth>();
 
         if (playerMovement != null)
         {
@@ -70,6 +74,8 @@ public class PerkManager : MonoBehaviour
         DamageMult        = 1f;
         DiveCooldownMult  = 1f;
         HealthRegenOnKill = 0f;
+        FireRateMult      = 1f;
+        DamageTakenMult   = 1f;
 
         foreach (PerkSO p in activePerks)
         {
@@ -78,6 +84,8 @@ public class PerkManager : MonoBehaviour
             DamageMult        *= p.damageMult;
             DiveCooldownMult  *= p.diveCooldownMult;
             HealthRegenOnKill += p.healthRegenOnKill;
+            FireRateMult      *= p.fireRateMult;
+            DamageTakenMult   *= p.damageTakenMult;
         }
     }
 
@@ -91,5 +99,12 @@ public class PerkManager : MonoBehaviour
 
         if (playerDive != null)
             playerDive.diveCooldown = Mathf.Max(0.1f, baseDiveCooldown * DiveCooldownMult);
+    }
+
+    /// <summary>Restores player health by the given amount, clamped to max health.</summary>
+    public void HealPlayer(float amount)
+    {
+        if (playerHealth != null)
+            playerHealth.Heal(amount);
     }
 }

@@ -16,4 +16,6 @@ public class PerkSO : ScriptableObject
     public float diveCooldownMult = 1f; // 0.8 = 20% faster
     public float damageMult = 1f;
     public float healthRegenOnKill;
+    public float fireRateMult = 1f;       // 1.5 = 50% faster fire rate
+    public float damageTakenMult = 1f;    // 0.6 = 40% less damage taken
 }

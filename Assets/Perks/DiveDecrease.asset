@@ -13,11 +13,13 @@ MonoBehaviour:
   m_Name: DiveDecrease
   m_EditorClassIdentifier: 
   perkName: Diving decrease
-  description: diving timer gets decreased
+  description: Diving timer gets decreased 10%
   icon: {fileID: 21300000, guid: e77c7f9a6ebccc14e9ac9be7a2a2d5af, type: 3}
   category: 0
   moveSpeedAdd: 0
   jumpForceAdd: 0
-  diveCooldownMult: 0.5
+  diveCooldownMult: 0.9
   damageMult: 1
   healthRegenOnKill: 0
+  fireRateMult: 1
+  damageTakenMult: 1

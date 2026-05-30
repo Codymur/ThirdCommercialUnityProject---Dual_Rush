@@ -117,12 +117,16 @@ public class GunController : MonoBehaviour
 
         if (LeftHanded && Input.GetMouseButton(0) && Time.time >= nextTimeToFire && !PerkSelectionUIScript.PerkChoosing)
         {
-            nextTimeToFire = Time.time + 1f / fireRate;
+            PerkManager pm = PerkManager.Instance;
+            float effectiveFireRate = fireRate * (pm != null ? pm.FireRateMult : 1f);
+            nextTimeToFire = Time.time + 1f / effectiveFireRate;
             Shoot();
         }
         else if (RightHanded && Input.GetMouseButton(1) && Time.time >= nextTimeToFire && !PerkSelectionUIScript.PerkChoosing)
         {
-            nextTimeToFire = Time.time + 1f / fireRate;
+            PerkManager pm = PerkManager.Instance;
+            float effectiveFireRate = fireRate * (pm != null ? pm.FireRateMult : 1f);
+            nextTimeToFire = Time.time + 1f / effectiveFireRate;
             Shoot();
         }
     }
@@ -153,7 +157,9 @@ public class GunController : MonoBehaviour
 
             if (target != null)
             {
-                target.TakeDamage(damage, FPScam.transform.forward);
+                PerkManager pm = PerkManager.Instance;
+                float effectiveDamage = damage * (pm != null ? pm.DamageMult : 1f);
+                target.TakeDamage(effectiveDamage, FPScam.transform.forward);
             }
 
             if (hit.rigidbody != null)
