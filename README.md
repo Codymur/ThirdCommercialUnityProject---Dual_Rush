@@ -52,6 +52,8 @@ Developed solo by [Seymur Shiriyev](https://github.com/Codymur) — Steamworks p
 ### 1. Kinetic First-Person Combat
 Every weapon interaction is physically grounded. Guns produce procedural recoil with stacked displacement on rapid fire, muzzle flash, shell ejection, and pooled bullet-hole decals. The player's kick (melee) is animated via DOTween and synchronized with a raycast hit window for frame-perfect feel. Dual-wielding is supported, with each hand independently bound to a mouse button and its own recoil profile.
 
+Hit detection distinguishes between body and head colliders — body hits route through the standard damage pipeline in `Target.cs`, while headshots bypass the damage calculation entirely and set health directly to zero for an instant kill. This adds a meaningful skill ceiling without complicating the core combat loop.
+
 ### 2. Fluid Movement
 The movement system combines standard FPS locomotion with a dedicated dive mechanic. Diving applies a physics impulse, temporarily reshapes the collider, modifies air control, and triggers a landing slide — all coordinated through a coroutine pipeline. Every action feeds procedural camera effects (FOV kick, pitch offset, lateral tilt) to maximize physical presence.
 
@@ -89,7 +91,7 @@ All enemies share a common state machine (Idle → Alert → Attack) via `EnemyB
 ```
 Assets/Scripts/
 ├── Guns/                          # Weapon systems
-│   ├── GunController.cs           # Raycast shooting, pooled decals, muzzle flash
+│   ├── GunController.cs           # Raycast shooting, targeted hitbox detection (head/body), pooled decals, muzzle flash
 │   ├── WeaponRecoil.cs            # Procedural positional & rotational recoil
 │   ├── DualPistolManager.cs       # Dual-wield pistol coordination
 │   ├── GunWallAvoidance.cs        # Prevents clipping into geometry
