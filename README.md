@@ -149,4 +149,11 @@ Perks are defined as `ScriptableObject` assets (`PerkSO`) and carry the followin
 
 ## License
 
-This project is proprietary. All rights reserved. No part of this codebase may be reproduced, distributed, or used without explicit written permission from the author.
+Copyright (c) 2026 Seymur Shiriyev. All Rights Reserved.
+
+This source code is made publicly available for portfolio and 
+educational viewing purposes only. You may NOT copy, reproduce, 
+redistribute, or use this code, assets in any project without explicit 
+written permission from the author.
+
+For licensing inquiries: seymur.t.shiriyev@gmail.com
