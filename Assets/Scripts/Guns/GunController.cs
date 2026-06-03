@@ -153,7 +153,8 @@ public class GunController : MonoBehaviour
 
         if (Physics.Raycast(FPScam.transform.position, FPScam.transform.forward, out RaycastHit hit, range, shootableLayers))
         {
-            Target target = hit.transform.GetComponent<Target>();
+            Target target = hit.collider.GetComponent<Target>();
+            EnemyHeadShot enemyHeadShotRef = hit.collider.GetComponent<EnemyHeadShot>();
 
             if (target != null)
             {
@@ -167,7 +168,16 @@ public class GunController : MonoBehaviour
                 hit.rigidbody.AddForce(-hit.normal * impactForce);
             }
 
-            if (target == null)
+            if (enemyHeadShotRef != null)
+            {
+                RusherEnemy rusherEnemyRef = hit.collider.GetComponentInParent<RusherEnemy>();
+                ShooterEnemy shooterEnemeyRef = hit.collider.GetComponentInParent<ShooterEnemy>();
+                if (rusherEnemyRef != null)
+                    rusherEnemyRef.TakeDamage(rusherEnemyRef.health, FPScam.transform.forward);
+                if (shooterEnemeyRef != null)
+                    shooterEnemeyRef.TakeDamage(shooterEnemeyRef.health, FPScam.transform.forward);
+            }
+            else if (target == null)
             {
                 SpawnImpact(hit.point);
                 SpawnDecal(hit.point, hit.normal, hit.transform);

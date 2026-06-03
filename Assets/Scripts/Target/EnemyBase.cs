@@ -103,6 +103,11 @@ public class EnemyBase : Target
         agent.enabled = false;
         col.enabled = false;
 
+        // Disable all child colliders (e.g. the Head SphereCollider) so they
+        // cannot receive raycasts during the post-death Destroy delay.
+        foreach (Collider childCol in GetComponentsInChildren<Collider>())
+            childCol.enabled = false;
+
         // ?? RAGDOLL HOOK ??????????????????????????????????????????
         // When you have a rigged model:
         //   1. Enable all Rigidbodies in the rig

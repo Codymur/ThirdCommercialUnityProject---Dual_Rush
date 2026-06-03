@@ -13657,6 +13657,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 843210719853672635, guid: 39734e20505aab546b9139e4fc27915a, type: 3}
+      propertyPath: m_TargetTexture
+      value: 
+      objectReference: {fileID: 8400000, guid: adda6ebb3be4e2143b7bb104047cb6fc, type: 2}
     - target: {fileID: 872394673772988135, guid: 39734e20505aab546b9139e4fc27915a, type: 3}
       propertyPath: cooldownImage
       value: 
@@ -13745,6 +13749,10 @@ PrefabInstance:
       propertyPath: healthBarFill
       value: 
       objectReference: {fileID: 95759977}
+    - target: {fileID: 6713987466303812633, guid: 39734e20505aab546b9139e4fc27915a, type: 3}
+      propertyPath: m_TargetTexture
+      value: 
+      objectReference: {fileID: 8400000, guid: adda6ebb3be4e2143b7bb104047cb6fc, type: 2}
     - target: {fileID: 7745285783600436627, guid: 39734e20505aab546b9139e4fc27915a, type: 3}
       propertyPath: m_TagString
       value: Player
