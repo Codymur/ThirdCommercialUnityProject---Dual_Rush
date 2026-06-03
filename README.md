@@ -10,7 +10,17 @@
 [![Blender](https://img.shields.io/badge/Blender-F5792A?logo=blender&logoColor=white)](https://www.blender.org/)
 [![Photoshop](https://img.shields.io/badge/Photoshop-31A8FF?logo=adobephotoshop&logoColor=white)](https://www.adobe.com/products/photoshop.html)
 [![Audacity](https://img.shields.io/badge/Audacity-0000CC?logo=audacity&logoColor=white)](https://www.audacityteam.org/)
-[![License](https://img.shields.io/badge/License-Proprietary-red)](#license)
+[![License](https://img.shields.io/badge/License-Source--Available-red)](#license)
+[![Status](https://img.shields.io/badge/Status-In%20Development-yellow)](#status)
+
+<br/>
+
+<!-- Add gameplay GIF here once trailer is recorded -->
+<!-- ![Gameplay](assets/gameplay.gif) -->
+
+**[▶ Watch Trailer](#)** · **[🎮 Try Demo on itch.io](#)** · **[⭐ Wishlist on Steam](#)**
+
+*(Links active from February 2027 — Steam Next Fest)*
 
 </div>
 
@@ -19,6 +29,21 @@
 ## Overview
 
 **Third Commercial** is a fast-paced, first-person roguelite shooter where each run challenges the player through an escalating cycle of combat rooms, enemy encounters, and permanent perk decisions. No two runs are the same — difficulty scales continuously and every perk choice compounds into a distinct playstyle.
+
+Developed solo by [Seymur Shiriyev](https://github.com/Codymur) — Steamworks partner and AI Systems student at VILNIUS TECH.
+
+---
+
+## Status & Roadmap
+
+| | Current | Target (Launch) |
+|---|---|---|
+| **Perks** | 6 | 20 |
+| **Rooms** | 7 | 25 |
+| **Enemy Types** | 2 | 4 |
+| **Demo** | ✅ Playable prototype | ✅ Polished demo |
+| **Steam Page** | 🔄 In preparation | ✅ Live |
+| **Next Fest** | — | February 2027 |
 
 ---
 
@@ -53,7 +78,7 @@ All enemies share a common state machine (Idle → Alert → Attack) via `EnemyB
 | Animation | Mecanim + DOTween procedural animation |
 | Tweening | DOTween (Demigiant) |
 | VFX | Cartoon FX Remaster (JMO Assets) |
-| Audio | Custom audio manager + Weapons of Choice FREE + Audacity|
+| Audio | Custom audio manager + Weapons of Choice FREE + Audacity |
 | Outlining | QuickOutline |
 | Post-Processing | URP Volume stack + custom dithering shaders |
 
@@ -136,6 +161,8 @@ Perks are defined as `ScriptableObject` assets (`PerkSO`) and carry the followin
 - **Universal Render Pipeline** package
 - **DOTween** (included under `Assets/Plugins/Demigiant`)
 
+> **Note:** Game assets (models, textures, audio) are excluded from this repository. The codebase is shared for portfolio and architectural reference purposes only.
+
 ---
 
 ## Getting Started
@@ -147,6 +174,24 @@ Perks are defined as `ScriptableObject` assets (`PerkSO`) and carry the followin
 
 ---
 
+## About the Developer
+
+**Seymur Shiriyev** — Steamworks partner and solo indie developer based in Baku, Azerbaijan. This is the third commercial project following two published titles on Steam under the developer name **Sensible Brain** (757,000+ impressions combined). Currently pursuing an AI Systems BSc at Vilnius Gediminas Technical University starting September 2026.
+
+[![GitHub](https://img.shields.io/badge/GitHub-Codymur-black?logo=github)](https://github.com/Codymur)
+[![Steam](https://img.shields.io/badge/Steam-Sensible%20Brain-1b2838?logo=steam)](https://store.steampowered.com/search/?publisher=Sensible%20Brain)
+
+---
+
 ## License
 
-This project is proprietary. All rights reserved. No part of this codebase may be reproduced, distributed, or used without explicit written permission from the author.
+Copyright (c) 2026 Seymur Shiriyev. All Rights Reserved.
+
+This source code is made publicly available for portfolio and educational viewing purposes only.
+
+You may **NOT**:
+- Copy, reproduce, or redistribute any part of this codebase
+- Use this code, assets in any project, commercial or non-commercial
+- Modify and redistribute this work in any form
+
+For licensing inquiries: seymur.t.shiriyev@gmail.com
