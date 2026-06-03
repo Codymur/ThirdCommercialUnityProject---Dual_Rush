@@ -16,7 +16,7 @@
 <br/>
 
 <!-- Add gameplay GIF here once trailer is recorded -->
-<!-- ![Gameplay](assets/gameplay.gif) -->
+![Gameplay](ThirdCommercialFootage.gif)
 
 **[▶ Watch Trailer](#)** · **[🎮 Try Demo on itch.io](#)** · **[⭐ Wishlist on Steam](#)**
 
