@@ -99,8 +99,14 @@ public class MainMenuUI : MonoBehaviour
     private Resolution[] _resolutions;
 
     // ── Lifecycle ─────────────────────────────────────────────────────────────
+
+
+    public GameObject AreYouSurePanel;
+
     private void Start()
     {
+        AreYouSurePanel.SetActive(false);
+
         if (settingsPanel != null)
         {
             settingsPanel.SetActive(false);
@@ -158,6 +164,7 @@ public class MainMenuUI : MonoBehaviour
     /// <summary>Hides the settings panel and restores the main buttons.</summary>
     public void CloseSettings()
     {
+        AreYouSurePanel.SetActive(false);
         if (settingsPanel != null)    settingsPanel.SetActive(false);
         if (mainButtonsPanel != null) mainButtonsPanel.SetActive(true);
     }
@@ -494,5 +501,15 @@ public class MainMenuUI : MonoBehaviour
 
         // FPS Display
         if (showFpsToggle        != null) showFpsToggle.isOn         = false;
+    }
+
+    public void ResetPanelActivating()
+    {
+        AreYouSurePanel.SetActive(true);
+    }
+
+    public void CancelReset()
+    {
+        AreYouSurePanel.SetActive(false);
     }
 }

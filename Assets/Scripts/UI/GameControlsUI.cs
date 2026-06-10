@@ -23,7 +23,7 @@ public class GameControlsUI : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(toggleKey))
+        if (Input.GetKeyDown(toggleKey) || Input.GetKeyDown(KeyCode.Escape))
             Toggle();
     }
 
