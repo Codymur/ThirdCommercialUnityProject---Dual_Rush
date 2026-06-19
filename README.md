@@ -1,6 +1,6 @@
 <div align="center">
 
-# Third Commercial
+# DUAL RUSH
 
 **Momentum-driven rogue-lite FPS featuring dual-wielding and card-driven upgrades in a dithered, cel-shaded style. Unity URP 6**
 
@@ -28,7 +28,7 @@
 
 ## Overview
 
-**Third Commercial** is a fast-paced, first-person roguelite shooter where each run challenges the player through an escalating cycle of combat rooms, enemy encounters, and permanent perk decisions. No two runs are the same — difficulty scales continuously and every perk choice compounds into a distinct playstyle.
+**Dual Rush** is a fast-paced, first-person roguelite shooter where each run challenges the player through an escalating cycle of combat rooms, enemy encounters, and permanent perk decisions. No two runs are the same — difficulty scales continuously and every perk choice compounds into a distinct playstyle.
 
 Developed solo by [Seymur Shiriyev](https://github.com/Codymur) — Steamworks partner and AI Systems student at VILNIUS TECH.
 
