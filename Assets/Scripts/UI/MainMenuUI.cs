@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -501,6 +502,8 @@ public class MainMenuUI : MonoBehaviour
 
         // FPS Display
         if (showFpsToggle        != null) showFpsToggle.isOn         = false;
+
+        AreYouSurePanel.SetActive(false);
     }
 
     public void ResetPanelActivating()

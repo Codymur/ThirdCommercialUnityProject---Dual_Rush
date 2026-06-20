@@ -34,7 +34,7 @@ public class EnemyBase : Target
 
     // Whether this enemy's room has been entered by the player.
     // Enemies stay in Idle and cannot attack until this is true.
-    private bool isActivated = false;
+    protected bool isActivated = false;
 
     // ?? Events � hook score system / perk triggers later ???????????
     public System.Action<EnemyBase> OnEnemyDeath;
@@ -57,7 +57,15 @@ public class EnemyBase : Target
         if (player == null)
         {
             player = PlayerMainChecking.Instance;
+
+            if (player == null)
+                Debug.LogWarning($"[EnemyBase] '{name}' could not find player via PlayerMainChecking.Instance. Enemy will be inactive.", this);
         }
+
+        // Warn early if the agent failed to land on the NavMesh.
+        if (!agent.isOnNavMesh)
+            Debug.LogWarning($"[EnemyBase] '{name}' NavMeshAgent is not on a NavMesh after Start. " +
+                             $"Check that NavMeshSurface covers spawn point {transform.position}.", this);
     }
 
     // ──────────────────────────────────────────────────────────────────────────

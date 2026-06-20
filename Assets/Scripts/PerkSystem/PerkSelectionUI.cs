@@ -31,6 +31,11 @@ public class PerkSelectionUI : MonoBehaviour
 
     public bool PerkChoosing = false;
 
+    //Background shader
+    public GameObject backgroundShaderObject;
+
+    public GameObject CursorCanvas;
+
     private void Awake()
     {
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
@@ -65,6 +70,8 @@ public class PerkSelectionUI : MonoBehaviour
         }
 
         panelRoot.SetActive(true);
+        backgroundShaderObject.SetActive(true);
+        CursorCanvas.SetActive(true);
         SetCursorState(true);
 
         PerkChoosing = true;
@@ -76,6 +83,8 @@ public class PerkSelectionUI : MonoBehaviour
     private void Hide()
     {
         if (panelRoot != null) panelRoot.SetActive(false);
+        backgroundShaderObject.SetActive(false);
+        CursorCanvas.SetActive(false);
         SetCursorState(false);
         Time.timeScale = 1f;
         PerkChoosing = false;
@@ -116,7 +125,7 @@ public class PerkSelectionUI : MonoBehaviour
 
     private static void SetCursorState(bool visible)
     {
-        Cursor.visible   = visible;
+        Cursor.visible   = false;
         Cursor.lockState = visible ? CursorLockMode.None : CursorLockMode.Locked;
     }
 }
