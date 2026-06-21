@@ -64,7 +64,7 @@ Material:
     - _Aspect: 1.7777778
     - _BumpScale: 1
     - _ClickScale: 0.43
-    - _ClickTime: 0.833313
+    - _ClickTime: 1085.7432
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DitherStrength: 0.093
@@ -88,9 +88,9 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _ClickPos: {r: 0.5475085, g: 0.6114865, b: 0, a: 0}
+    - _ClickPos: {r: 0.44932434, g: 0.5349099, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _Mouse: {r: 0.65427476, g: 0.4532346, b: 0, a: 0}
+    - _Mouse: {r: 0.27956074, g: 0.5033781, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

@@ -27,15 +27,15 @@ Material:
     m_Floats:
     - _Aspect: 1.7777778
     - _ClickScale: 0.25
-    - _ClickTime: 3.0464592
-    - _DitherStrength: 0.157
+    - _ClickTime: 2.1259842
+    - _DitherStrength: 0.35
     - _MouseDown: 0
     - _Palette: 7.2
-    - _Pixelation: 0.1
+    - _Pixelation: 0.2
     - _Scale: 1
     - _Speed: 1
     m_Colors:
-    - _ClickPos: {r: 0.5392736, g: 0.10923422, b: 0, a: 0}
-    - _Mouse: {r: 0.48036334, g: 0.99999976, b: 0, a: 0}
+    - _ClickPos: {r: 0.50000006, g: 0.5, b: 0, a: 0}
+    - _Mouse: {r: 0.49999994, g: 0.50000024, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

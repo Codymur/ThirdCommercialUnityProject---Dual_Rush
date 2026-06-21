@@ -9,7 +9,7 @@ public class FirstLevelStart : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             RunManagerScript.StartRun();
-            Destroy(gameObject);
+            //Destroy(gameObject);
         }
     }
 }

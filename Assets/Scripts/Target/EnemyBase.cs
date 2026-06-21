@@ -103,10 +103,15 @@ public class EnemyBase : Target
         OnEnemyDeath?.Invoke(this);
         OnDeath?.Invoke(this);
 
-        // Trigger Regeneration perk
+        // Trigger on-kill perk effects
         PerkManager pm = PerkManager.Instance;
-        if (pm != null && pm.HealthRegenOnKill > 0f)
-            pm.HealPlayer(pm.HealthRegenOnKill);
+        if (pm != null)
+        {
+            if (pm.HealthRegenOnKill > 0f)
+                pm.HealPlayer(pm.HealthRegenOnKill);
+
+            pm.TriggerKillFireRateBuff(); // Bloodrush
+        }
 
         agent.enabled = false;
         col.enabled = false;

@@ -67,6 +67,11 @@ public class GunController : MonoBehaviour
 
     public PerkSelectionUI PerkSelectionUIScript;
 
+    private PlayerHealth _playerHealth;
+
+    private const float LowHealthThreshold    = 0.30f;  // Last Stand activates at or below 30% HP
+    private const float FinisherHealthThreshold = 0.35f; // Executioner activates at or below 35% HP
+
     private void Awake()
     {
         Transform root = transform.root;
@@ -90,6 +95,7 @@ public class GunController : MonoBehaviour
         GunAnimator = GetComponent<Animator>();
         _cfxrEffect = muzzleFlash.GetComponent<CFXR_Effect>();
         muzzleFlash.gameObject.SetActive(false);
+        _playerHealth = GetComponentInParent<PlayerHealth>();
     }
 
     /// <summary>Caches handedness and WeaponRecoil when the gun is (re)enabled.</summary>
@@ -118,14 +124,14 @@ public class GunController : MonoBehaviour
         if (LeftHanded && Input.GetMouseButton(0) && Time.time >= nextTimeToFire && !PerkSelectionUIScript.PerkChoosing)
         {
             PerkManager pm = PerkManager.Instance;
-            float effectiveFireRate = fireRate * (pm != null ? pm.FireRateMult : 1f);
+            float effectiveFireRate = fireRate * (pm != null ? pm.FireRateMult * pm.ActiveKillFireRateMult : 1f);
             nextTimeToFire = Time.time + 1f / effectiveFireRate;
             Shoot();
         }
         else if (RightHanded && Input.GetMouseButton(1) && Time.time >= nextTimeToFire && !PerkSelectionUIScript.PerkChoosing)
         {
             PerkManager pm = PerkManager.Instance;
-            float effectiveFireRate = fireRate * (pm != null ? pm.FireRateMult : 1f);
+            float effectiveFireRate = fireRate * (pm != null ? pm.FireRateMult * pm.ActiveKillFireRateMult : 1f);
             nextTimeToFire = Time.time + 1f / effectiveFireRate;
             Shoot();
         }
@@ -160,6 +166,19 @@ public class GunController : MonoBehaviour
             {
                 PerkManager pm = PerkManager.Instance;
                 float effectiveDamage = damage * (pm != null ? pm.DamageMult : 1f);
+
+                if (pm != null)
+                {
+                    // Last Stand: extra damage when the player is critically low on health.
+                    if (pm.LowHealthDamageMult > 1f && _playerHealth != null
+                        && _playerHealth.GetHealthFraction() <= LowHealthThreshold)
+                        effectiveDamage *= pm.LowHealthDamageMult;
+
+                    // Executioner: extra damage to already-weakened enemies.
+                    if (pm.FinisherDamageMult > 1f && target.HealthFraction <= FinisherHealthThreshold)
+                        effectiveDamage *= pm.FinisherDamageMult;
+                }
+
                 target.TakeDamage(effectiveDamage, FPScam.transform.forward);
             }
 

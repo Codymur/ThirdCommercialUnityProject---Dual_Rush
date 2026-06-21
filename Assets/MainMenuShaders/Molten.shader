@@ -266,15 +266,18 @@ Shader "MainMenu/Molten"
                     f += perkCard(uv, float2(xPos, yPos), hs, rot, 0.022) * fade;
                 }
 
-                float t = saturate(f * 0.5);
-                t += 0.07 * fbm(uv * 3.0 + iTime * 0.3) - 0.035;
+                //float t = saturate(f * 0.5);
+                //t += 0.07 * fbm(uv * 3.0 + iTime * 0.3) - 0.035;
 
                 // ── cursor light effect (from Shards) ──────────
-                // float dm   = length(uv - m);
-                // float prox = exp(-dm * dm * 60.0);
-    
-                // float t = saturate((f * 0.5) + (prox * 0.5)); // Added prox to brightness
-                // t += 0.07 * fbm(uv * 3.0 + iTime * 0.3) - 0.035;
+                // Light tightens briefly on left-click, then eases back.
+                float dm     = length(uv - m);
+                float shrink = exp(-clkT * 6.0);                    // 1 at click → 0 after ~0.5s
+                float falloff = lerp(60.0, 150.0, shrink);          // bigger = smaller light
+                float prox   = exp(-dm * dm * falloff);
+
+                float t = saturate((f * 0.5) + (prox * 0.5));
+                t += 0.07 * fbm(uv * 3.0 + iTime * 0.3) - 0.035;
 
                 // ── self-spawning bullet impacts (time-driven, no clicks) ──
                 // One bullet fires every _BulletInterval seconds; each lives

@@ -5,6 +5,12 @@ public class Target : MonoBehaviour
 {
     public float health = 50f;
 
+    /// <summary>Health value at spawn time, used to calculate HealthFraction for conditional perks.</summary>
+    protected float maxHealth;
+
+    /// <summary>Returns current health as a 0–1 fraction of the starting health.</summary>
+    public float HealthFraction => maxHealth > 0f ? health / maxHealth : 0f;
+
     [Header("Damage Visual Feedback")]
     public Material[][] defaultMaterial;
     public Material flashMaterial;
@@ -21,6 +27,7 @@ public class Target : MonoBehaviour
 
     protected virtual void Awake()
     {
+        maxHealth = health;
         renderers = GetComponentsInChildren<Renderer>();
         defaultMaterial = new Material[renderers.Length][];
         for (int i = 0; i < renderers.Length; i++)

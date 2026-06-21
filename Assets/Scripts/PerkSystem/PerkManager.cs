@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,19 +16,38 @@ public class PerkManager : MonoBehaviour
     private float baseMoveSpeed;
     private float baseJumpForce;
     private float baseDiveCooldown;
+    private float baseAirMultiplier;
+    private float baseMaxHealth;
+    private float baseInvincibilityDuration;
 
     private PlayerMovementTutorial playerMovement;
     private PlayerDive playerDive;
     private PlayerHealth playerHealth;
 
     // ── Derived stats (recalculated on each perk pickup) ─────────────────
-    public float MoveSpeedBonus      { get; private set; }
-    public float JumpForceBonus      { get; private set; }
-    public float DamageMult          { get; private set; } = 1f;
-    public float DiveCooldownMult    { get; private set; } = 1f;
-    public float HealthRegenOnKill   { get; private set; }
-    public float FireRateMult        { get; private set; } = 1f;
-    public float DamageTakenMult     { get; private set; } = 1f;
+    public float MoveSpeedBonus         { get; private set; }
+    public float JumpForceBonus         { get; private set; }
+    public float DamageMult             { get; private set; } = 1f;
+    public float DiveCooldownMult       { get; private set; } = 1f;
+    public float HealthRegenOnKill      { get; private set; }
+    public float FireRateMult           { get; private set; } = 1f;
+    public float DamageTakenMult        { get; private set; } = 1f;
+    public float AirControlMult         { get; private set; } = 1f;
+    public float PostHitSpeedBoost      { get; private set; }
+    public float PostHitSpeedDuration   { get; private set; }
+    public float FinisherDamageMult     { get; private set; } = 1f;
+    public float KillFireRateBuffMult   { get; private set; } = 1f;
+    public float KillFireRateBuffDuration { get; private set; }
+    public float LowHealthDamageMult    { get; private set; } = 1f;
+    public float MaxHealthAdd           { get; private set; }
+    public float InvincibilityDurationAdd { get; private set; }
+
+    // ── Runtime buff state ────────────────────────────────────────────────
+    /// <summary>Active Bloodrush fire rate multiplier — 1f when no buff is running.</summary>
+    public float ActiveKillFireRateMult { get; private set; } = 1f;
+
+    private Coroutine _killFireRateCoroutine;
+    private Coroutine _postHitSpeedCoroutine;
 
     private void Awake()
     {
@@ -44,12 +64,19 @@ public class PerkManager : MonoBehaviour
 
         if (playerMovement != null)
         {
-            baseMoveSpeed  = playerMovement.moveSpeed;
-            baseJumpForce  = playerMovement.jumpForce;
+            baseMoveSpeed      = playerMovement.moveSpeed;
+            baseJumpForce      = playerMovement.jumpForce;
+            baseAirMultiplier  = playerMovement.airMultiplier;
         }
 
         if (playerDive != null)
             baseDiveCooldown = playerDive.diveCooldown;
+
+        if (playerHealth != null)
+        {
+            baseMaxHealth              = playerHealth.maxHealth;
+            baseInvincibilityDuration  = playerHealth.invincibilityDuration;
+        }
     }
 
     /// <summary>Adds a perk and immediately applies its stat changes to the player.</summary>
@@ -65,40 +92,33 @@ public class PerkManager : MonoBehaviour
     /// <summary>Returns a read-only view of all currently active perks.</summary>
     public IReadOnlyList<PerkSO> ActivePerks => activePerks;
 
-    // ── Internal ─────────────────────────────────────────────────────────
-
-    private void RecalculateStats()
+    /// <summary>
+    /// Called by EnemyBase on death. Activates the Bloodrush fire rate buff if the perk is active.
+    /// Calling with no Bloodrush perks equipped is a safe no-op.
+    /// </summary>
+    public void TriggerKillFireRateBuff()
     {
-        MoveSpeedBonus    = 0f;
-        JumpForceBonus    = 0f;
-        DamageMult        = 1f;
-        DiveCooldownMult  = 1f;
-        HealthRegenOnKill = 0f;
-        FireRateMult      = 1f;
-        DamageTakenMult   = 1f;
+        if (KillFireRateBuffDuration <= 0f || KillFireRateBuffMult <= 1f) return;
 
-        foreach (PerkSO p in activePerks)
-        {
-            MoveSpeedBonus    += p.moveSpeedAdd;
-            JumpForceBonus    += p.jumpForceAdd;
-            DamageMult        *= p.damageMult;
-            DiveCooldownMult  *= p.diveCooldownMult;
-            HealthRegenOnKill += p.healthRegenOnKill;
-            FireRateMult      *= p.fireRateMult;
-            DamageTakenMult   *= p.damageTakenMult;
-        }
+        if (_killFireRateCoroutine != null)
+            StopCoroutine(_killFireRateCoroutine);
+
+        _killFireRateCoroutine = StartCoroutine(KillFireRateBuffCoroutine());
     }
 
-    private void ApplyToPlayer()
+    /// <summary>
+    /// Called by PlayerHealth when the player survives a hit.
+    /// Activates the Adrenaline speed boost if the perk is active.
+    /// Calling with no Adrenaline perks equipped is a safe no-op.
+    /// </summary>
+    public void TriggerPostHitSpeedBoost()
     {
-        if (playerMovement != null)
-        {
-            playerMovement.moveSpeed  = baseMoveSpeed  + MoveSpeedBonus;
-            playerMovement.jumpForce  = baseJumpForce  + JumpForceBonus;
-        }
+        if (PostHitSpeedBoost <= 0f || PostHitSpeedDuration <= 0f) return;
 
-        if (playerDive != null)
-            playerDive.diveCooldown = Mathf.Max(0.1f, baseDiveCooldown * DiveCooldownMult);
+        if (_postHitSpeedCoroutine != null)
+            StopCoroutine(_postHitSpeedCoroutine);
+
+        _postHitSpeedCoroutine = StartCoroutine(PostHitSpeedCoroutine());
     }
 
     /// <summary>Restores player health by the given amount, clamped to max health.</summary>
@@ -106,5 +126,94 @@ public class PerkManager : MonoBehaviour
     {
         if (playerHealth != null)
             playerHealth.Heal(amount);
+    }
+
+    // ── Internal ─────────────────────────────────────────────────────────
+
+    private void RecalculateStats()
+    {
+        MoveSpeedBonus          = 0f;
+        JumpForceBonus          = 0f;
+        DamageMult              = 1f;
+        DiveCooldownMult        = 1f;
+        HealthRegenOnKill       = 0f;
+        FireRateMult            = 1f;
+        DamageTakenMult         = 1f;
+        AirControlMult          = 1f;
+        PostHitSpeedBoost       = 0f;
+        PostHitSpeedDuration    = 0f;
+        FinisherDamageMult      = 1f;
+        KillFireRateBuffMult    = 1f;
+        KillFireRateBuffDuration = 0f;
+        LowHealthDamageMult     = 1f;
+        MaxHealthAdd            = 0f;
+        InvincibilityDurationAdd = 0f;
+
+        foreach (PerkSO p in activePerks)
+        {
+            MoveSpeedBonus          += p.moveSpeedAdd;
+            JumpForceBonus          += p.jumpForceAdd;
+            DamageMult              *= p.damageMult;
+            DiveCooldownMult        *= p.diveCooldownMult;
+            HealthRegenOnKill       += p.healthRegenOnKill;
+            FireRateMult            *= p.fireRateMult;
+            DamageTakenMult         *= p.damageTakenMult;
+            AirControlMult          *= p.airControlMult;
+            PostHitSpeedBoost       += p.postHitSpeedBoost;
+            PostHitSpeedDuration    += p.postHitSpeedDuration;
+            FinisherDamageMult      *= p.finisherDamageMult;
+            KillFireRateBuffMult    *= p.killFireRateBuffMult;
+            KillFireRateBuffDuration += p.killFireRateBuffDuration;
+            LowHealthDamageMult     *= p.lowHealthDamageMult;
+            MaxHealthAdd            += p.maxHealthAdd;
+            InvincibilityDurationAdd += p.invincibilityDurationAdd;
+        }
+    }
+
+    private void ApplyToPlayer()
+    {
+        if (playerMovement != null)
+        {
+            playerMovement.moveSpeed   = baseMoveSpeed + MoveSpeedBonus;
+            playerMovement.jumpForce   = baseJumpForce + JumpForceBonus;
+            playerMovement.airMultiplier = baseAirMultiplier * AirControlMult;
+        }
+
+        if (playerDive != null)
+            playerDive.diveCooldown = Mathf.Max(0.1f, baseDiveCooldown * DiveCooldownMult);
+
+        if (playerHealth != null)
+        {
+            float prevMax = playerHealth.maxHealth;
+            playerHealth.maxHealth = baseMaxHealth + MaxHealthAdd;
+
+            // Heal by the difference so picking Toughness immediately grants the extra HP.
+            float healthGained = playerHealth.maxHealth - prevMax;
+            if (healthGained > 0f)
+                playerHealth.Heal(healthGained);
+
+            playerHealth.invincibilityDuration = baseInvincibilityDuration + InvincibilityDurationAdd;
+        }
+    }
+
+    private IEnumerator KillFireRateBuffCoroutine()
+    {
+        ActiveKillFireRateMult = KillFireRateBuffMult;
+        yield return new WaitForSeconds(KillFireRateBuffDuration);
+        ActiveKillFireRateMult = 1f;
+        _killFireRateCoroutine = null;
+    }
+
+    private IEnumerator PostHitSpeedCoroutine()
+    {
+        if (playerMovement != null)
+            playerMovement.moveSpeed = baseMoveSpeed + MoveSpeedBonus + PostHitSpeedBoost;
+
+        yield return new WaitForSeconds(PostHitSpeedDuration);
+
+        if (playerMovement != null)
+            playerMovement.moveSpeed = baseMoveSpeed + MoveSpeedBonus;
+
+        _postHitSpeedCoroutine = null;
     }
 }

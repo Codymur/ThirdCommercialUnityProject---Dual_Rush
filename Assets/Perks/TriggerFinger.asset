@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   perkName: Trigger Finger
   description: Fire rate of weapons get 10% increase
-  icon: {fileID: 21300000, guid: f446ceac60ed41a42bf4e1669eb8beb0, type: 3}
+  icon: {fileID: 21300000, guid: 45f0512dfe1b5f14f9addd502c56ea0b, type: 3}
   category: 1
   moveSpeedAdd: 0
   jumpForceAdd: 0
@@ -23,3 +23,12 @@ MonoBehaviour:
   healthRegenOnKill: 0
   fireRateMult: 1.1
   damageTakenMult: 1
+  airControlMult: 1
+  postHitSpeedBoost: 0
+  postHitSpeedDuration: 0
+  finisherDamageMult: 1
+  killFireRateBuffMult: 1
+  killFireRateBuffDuration: 0
+  lowHealthDamageMult: 1
+  maxHealthAdd: 0
+  invincibilityDurationAdd: 0

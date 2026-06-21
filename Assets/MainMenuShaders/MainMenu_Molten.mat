@@ -28,7 +28,7 @@ Material:
     - _Aspect: 1.7777778
     - _BulletInterval: 0.6
     - _ClickScale: 1.8
-    - _ClickTime: 2.1954222
+    - _ClickTime: 366.1714
     - _DitherStrength: 0.07
     - _MouseDown: 0
     - _Palette: 18.6
@@ -36,7 +36,7 @@ Material:
     - _Scale: 0.63
     - _Speed: 1
     m_Colors:
-    - _ClickPos: {r: 0.43348822, g: 0.07207207, b: 0, a: 0}
-    - _Mouse: {r: 0.47402862, g: 0.99999976, b: 0, a: 0}
+    - _ClickPos: {r: 0.42588684, g: 0.09121621, b: 0, a: 0}
+    - _Mouse: {r: 1.2634737e-22, g: 0.8749569, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

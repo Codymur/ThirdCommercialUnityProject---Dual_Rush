@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   perkName: Diving decrease
   description: Diving timer gets decreased 10%
-  icon: {fileID: 21300000, guid: e77c7f9a6ebccc14e9ac9be7a2a2d5af, type: 3}
+  icon: {fileID: 21300000, guid: 76f6aca465c061243a9d064e8d3129b2, type: 3}
   category: 0
   moveSpeedAdd: 0
   jumpForceAdd: 0
@@ -23,3 +23,12 @@ MonoBehaviour:
   healthRegenOnKill: 0
   fireRateMult: 1
   damageTakenMult: 1
+  airControlMult: 1
+  postHitSpeedBoost: 0
+  postHitSpeedDuration: 0
+  finisherDamageMult: 1
+  killFireRateBuffMult: 1
+  killFireRateBuffDuration: 0
+  lowHealthDamageMult: 1
+  maxHealthAdd: 0
+  invincibilityDurationAdd: 0

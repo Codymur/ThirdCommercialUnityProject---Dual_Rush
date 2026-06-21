@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   perkName: Killer
   description: Damaging 25% more
-  icon: {fileID: 21300000, guid: 07caf3d1930bab14aa8f6dcdf2db871a, type: 3}
+  icon: {fileID: 21300000, guid: 682552a04f242fe48bfeff4760a2889d, type: 3}
   category: 1
   moveSpeedAdd: 0
   jumpForceAdd: 0
@@ -23,3 +23,12 @@ MonoBehaviour:
   healthRegenOnKill: 0
   fireRateMult: 1
   damageTakenMult: 1
+  airControlMult: 1
+  postHitSpeedBoost: 0
+  postHitSpeedDuration: 0
+  finisherDamageMult: 1
+  killFireRateBuffMult: 1
+  killFireRateBuffDuration: 0
+  lowHealthDamageMult: 1
+  maxHealthAdd: 0
+  invincibilityDurationAdd: 0

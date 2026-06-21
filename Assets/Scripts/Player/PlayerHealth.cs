@@ -71,7 +71,10 @@ public class PlayerHealth : Target
         if (health <= 0f)
             Die(hitDirection);
         else
+        {
+            if (pm != null) pm.TriggerPostHitSpeedBoost();
             StartCoroutine(InvincibilityCoroutine());
+        }
     }
 
     /// <summary>Restores health by amount, clamped to maxHealth. Has no effect when dead.</summary>
