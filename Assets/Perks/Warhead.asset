@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   perkName: Warhead
   description: Deal 15% more damage.
-  icon: {fileID: 21300000, guid: 5a46cfb5ed60e07439d3fc338dd1be3b, type: 3}
+  icon: {fileID: 21300000, guid: ae1251c55c64582419ab4eef833be3dd, type: 3}
   category: 1
   moveSpeedAdd: 0
   jumpForceAdd: 0

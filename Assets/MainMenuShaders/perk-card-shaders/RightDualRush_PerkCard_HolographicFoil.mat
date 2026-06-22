@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: RightDualRush_PerkCard_HolographicFoil
+  m_Shader: {fileID: 4800000, guid: c5f5c39606f702f4991f6966bbedf494, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords:
+  - _USECATEGORY_ON
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _Aspect: 0.7
+    - _Category: 0
+    - _Click: 0
+    - _ColorMask: 15
+    - _Dissolve: 0
+    - _DitherScale: 1
+    - _EdgeWidth: 0.04
+    - _Flare: 0.5218911
+    - _FxTime: 0
+    - _GlowRadius: 0.26
+    - _GlowStrength: 0.58
+    - _Grain: 0.025
+    - _HoloScale: 3
+    - _HoloSpeed: 0.15
+    - _Hover: 1
+    - _HoverSheen: 0.95
+    - _IdleGlow: 0.18
+    - _IdleSheen: 0.22
+    - _Saturation: 0.85
+    - _ShineSpeed: 1.4
+    - _Stencil: 0
+    - _StencilComp: 8
+    - _StencilOp: 0
+    - _StencilReadMask: 255
+    - _StencilWriteMask: 255
+    - _TiltShift: 1.8
+    - _UseCategory: 1
+    m_Colors:
+    - _AccentColor: {r: 1, g: 0.41568625, b: 0.078431346, a: 1}
+    - _BaseColor: {r: 0, g: 0, b: 0, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _CombatColor: {r: 0.937, g: 0.42, b: 0.227, a: 1}
+    - _Mouse: {r: 0.5, g: 0.5, b: 0, a: 0}
+    - _MovementColor: {r: 0.5424528, g: 0.68599707, b: 1, a: 1}
+    - _SurvivalColor: {r: 0.949, g: 0.757, b: 0.306, a: 1}
+    - _Tilt: {r: -0.27730486, g: -0.014643919, b: 0, a: 0}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1

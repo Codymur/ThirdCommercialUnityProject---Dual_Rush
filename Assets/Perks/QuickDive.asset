@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   perkName: Quick Dive
   description: Dive cooldown decreased by 20%.
-  icon: {fileID: 21300000, guid: acb9b0a1c2f95354b8909d6552c25206, type: 3}
+  icon: {fileID: 21300000, guid: 40d6848a31f1702478f95a61a2162e8b, type: 3}
   category: 0
   moveSpeedAdd: 0
   jumpForceAdd: 0

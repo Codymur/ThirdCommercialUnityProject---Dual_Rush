@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   perkName: Executioner
   description: Deal 50% extra damage to enemies below 35% HP.
-  icon: {fileID: 21300000, guid: 4b88006cc0cea4f45993a1ca58d7fd64, type: 3}
+  icon: {fileID: 21300000, guid: aa8ec5f11c38bf545b456211287301c4, type: 3}
   category: 1
   moveSpeedAdd: 0
   jumpForceAdd: 0

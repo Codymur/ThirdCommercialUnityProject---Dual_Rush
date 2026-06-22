@@ -46,6 +46,9 @@ public class PerkCardUI : MonoBehaviour
             iconImage.sprite  = perk.icon;
             iconImage.enabled = perk.icon != null;
         }
+
+        var fx = GetComponentInChildren<PerkCardFX>(true);
+        if (fx != null) fx.SetCategory(perk.category);
     }
 
     private void OnButtonClicked() => onSelected?.Invoke(currentPerk);

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   perkName: Toughness
   description: Increase maximum HP by 25.
-  icon: {fileID: 21300000, guid: 916c36c3c8e0ad547930f908a31708fa, type: 3}
+  icon: {fileID: 21300000, guid: 909c6dadfcc1afd43bb14c7a96c02f8a, type: 3}
   category: 2
   moveSpeedAdd: 0
   jumpForceAdd: 0

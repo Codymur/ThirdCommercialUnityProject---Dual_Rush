@@ -1,12 +1,9 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-/// <summary>
-/// Screen-space canvas that presents 3 perk card choices to the player.
-/// Hides the cursor while closed; shows and locks it while open.
-/// Call <see cref="Show"/> from <see cref="PerkPickup"/> to open it.
-/// </summary>
 public class PerkSelectionUI : MonoBehaviour
 {
     public static PerkSelectionUI Instance { get; private set; }
@@ -25,9 +22,19 @@ public class PerkSelectionUI : MonoBehaviour
 
     [Header("Dismiss")]
     [Tooltip("Button that skips perk selection without picking any card.")]
-    public UnityEngine.UI.Button dismissButton;
+    public Button dismissButton;
+
+    [Header("Selection Delay")]
+    [Tooltip("How long the panel lingers after a card is picked before dissolving.")]
+    [Range(0f, 3f)] public float postPickDelay = 0.6f;
+
+    [Tooltip("How long the dissolve animation takes (seconds, realtime).")]
+    [Range(0f, 2f)] public float dissolveDuration = 0.55f;
+
+    private static readonly int DissolveProp = Shader.PropertyToID("_Dissolve");
 
     private Action onPerkChosen;
+    private bool isResolving;
 
     public bool PerkChoosing = false;
 
@@ -47,10 +54,6 @@ public class PerkSelectionUI : MonoBehaviour
         Hide();
     }
 
-    /// <summary>
-    /// Randomly samples 3 perks from the pool and presents the selection UI.
-    /// <paramref name="callback"/> is invoked after the player picks one.
-    /// </summary>
     public void Show(Action callback)
     {
         if (perkPool == null || perkPool.Length == 0)
@@ -61,6 +64,7 @@ public class PerkSelectionUI : MonoBehaviour
         }
 
         onPerkChosen = callback;
+        isResolving = false;
 
         PerkSO[] chosen = SamplePerks(3);
         for (int i = 0; i < cardSlots.Length; i++)
@@ -74,9 +78,11 @@ public class PerkSelectionUI : MonoBehaviour
         CursorCanvas.SetActive(true);
         SetCursorState(true);
 
-        PerkChoosing = true;
+        // reset dissolve so cards appear solid every time the panel opens
+        foreach (var m in GatherDissolveMaterials())
+            m.SetFloat(DissolveProp, 0f);
 
-        // Pause gameplay time so enemies don't move while choosing.
+        PerkChoosing = true;
         Time.timeScale = 0f;
     }
 
@@ -92,17 +98,70 @@ public class PerkSelectionUI : MonoBehaviour
 
     private void OnCardClicked(PerkSO perk)
     {
+        if (isResolving) return;
+        isResolving = true;
+
         PerkManager.Instance.AddPerk(perk);
-        Hide();
-        onPerkChosen?.Invoke();
-        onPerkChosen = null;
+        StartCoroutine(DissolveAndClose(postPickDelay));
     }
 
     private void OnDismissClicked()
     {
+        if (isResolving) return;
+        isResolving = true;
+
+        StartCoroutine(DissolveAndClose(0f));   // no linger on dismiss
+    }
+
+    private IEnumerator DissolveAndClose(float lingerSeconds)
+    {
+        if (lingerSeconds > 0f)
+            yield return new WaitForSecondsRealtime(lingerSeconds);
+
+        var mats = GatherDissolveMaterials();
+
+        if (dissolveDuration > 0f && mats.Count > 0)
+        {
+            float t = 0f;
+            while (t < dissolveDuration)
+            {
+                t += Time.unscaledDeltaTime;
+                float p = Mathf.Clamp01(t / dissolveDuration);
+                for (int i = 0; i < mats.Count; i++)
+                    mats[i].SetFloat(DissolveProp, p);
+                yield return null;
+            }
+            for (int i = 0; i < mats.Count; i++)
+                mats[i].SetFloat(DissolveProp, 1f);
+        }
+
         Hide();
+
+        // restore so the next open shows solid cards
+        for (int i = 0; i < mats.Count; i++)
+            mats[i].SetFloat(DissolveProp, 0f);
+
         onPerkChosen?.Invoke();
         onPerkChosen = null;
+    }
+
+    /// <summary>
+    /// Finds every UI Graphic under panelRoot whose material exposes _Dissolve —
+    /// i.e. every object using the DualRush/PerkCard/DitherGlow shader.
+    /// </summary>
+    private List<Material> GatherDissolveMaterials()
+    {
+        var list = new List<Material>();
+        if (panelRoot == null) return list;
+
+        var graphics = panelRoot.GetComponentsInChildren<Graphic>(true);
+        foreach (var g in graphics)
+        {
+            var m = g.material;
+            if (m != null && m.HasProperty(DissolveProp))
+                list.Add(m);
+        }
+        return list;
     }
 
     // ── Helpers ──────────────────────────────────────────────────────────
@@ -125,7 +184,7 @@ public class PerkSelectionUI : MonoBehaviour
 
     private static void SetCursorState(bool visible)
     {
-        Cursor.visible   = false;
+        Cursor.visible = false;
         Cursor.lockState = visible ? CursorLockMode.None : CursorLockMode.Locked;
     }
 }

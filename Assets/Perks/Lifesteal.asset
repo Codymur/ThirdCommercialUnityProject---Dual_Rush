@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   perkName: Lifesteal
   description: Restore 8 HP on every kill.
-  icon: {fileID: 21300000, guid: 83946c1b70e76fc46a26858cb042df15, type: 3}
+  icon: {fileID: 21300000, guid: 6680fb1d38cd99e49b5c71138e313ec7, type: 3}
   category: 2
   moveSpeedAdd: 0
   jumpForceAdd: 0

@@ -3,6 +3,8 @@ using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Loads the Main Menu scene when the player presses Escape.
+/// Uses the scene's LevelLoader for a transition animation when one is available,
+/// and falls back to a direct load otherwise.
 /// Attach to any persistent GameObject in a level scene.
 /// </summary>
 public class ReturnToMainMenu : MonoBehaviour
@@ -23,13 +25,19 @@ public class ReturnToMainMenu : MonoBehaviour
     }
 
     /// <summary>
-    /// Loads the Main Menu scene. Can also be called from a UI button.
+    /// Loads the Main Menu scene with a transition animation.
+    /// Can also be called from a UI button.
     /// </summary>
     public void ReturnToMenu()
     {
         Time.timeScale = 1f;
         Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-        SceneManager.LoadScene(mainMenuSceneName);
+        Cursor.visible = false;
+
+        LevelLoader loader = Object.FindFirstObjectByType<LevelLoader>();
+        if (loader != null)
+            loader.LoadLevel(mainMenuSceneName);
+        else
+            SceneManager.LoadScene(mainMenuSceneName);
     }
 }

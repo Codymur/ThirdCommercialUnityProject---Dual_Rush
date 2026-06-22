@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   perkName: Glass Cannon
   description: Deal 40% more damage, but take 20% more.
-  icon: {fileID: 21300000, guid: e7005179e9dc4b245b89d57882faa624, type: 3}
+  icon: {fileID: 21300000, guid: b83987d2fdc0b434494f9a8ed683c190, type: 3}
   category: 1
   moveSpeedAdd: 0
   jumpForceAdd: 0

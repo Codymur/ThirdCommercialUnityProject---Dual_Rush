@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   perkName: Speedy Gonzales
   description: Move 25% faster
-  icon: {fileID: 21300000, guid: c19092c8384ee9843a43a1fa4b47051a, type: 3}
+  icon: {fileID: 21300000, guid: 5265738de65b7134fab8f34c63b8bc36, type: 3}
   category: 0
   moveSpeedAdd: 1.5
   jumpForceAdd: 1

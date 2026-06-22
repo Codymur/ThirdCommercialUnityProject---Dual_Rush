@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   perkName: Last Stand
   description: Deal 50% more damage when at or below 30% HP.
-  icon: {fileID: 21300000, guid: a5b15a064d27a8b4f897132e8c0d1edb, type: 3}
+  icon: {fileID: 21300000, guid: 3a87e68adfb1595469d2a20c9b82d01a, type: 3}
   category: 1
   moveSpeedAdd: 0
   jumpForceAdd: 0

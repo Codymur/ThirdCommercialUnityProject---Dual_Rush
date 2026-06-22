@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   perkName: Killer
   description: Damaging 25% more
-  icon: {fileID: 21300000, guid: 682552a04f242fe48bfeff4760a2889d, type: 3}
+  icon: {fileID: 21300000, guid: 8520e21588e25f340b72913b7ffc3bc4, type: 3}
   category: 1
   moveSpeedAdd: 0
   jumpForceAdd: 0

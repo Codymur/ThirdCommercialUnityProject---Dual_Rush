@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   perkName: Hair Spring
   description: Significantly increases your jump height.
-  icon: {fileID: 21300000, guid: e01017d14159a6c4e929e4486b0cd7b3, type: 3}
+  icon: {fileID: 21300000, guid: c37db046df90f004a9405b8333980c8d, type: 3}
   category: 0
   moveSpeedAdd: 0
   jumpForceAdd: 2.5

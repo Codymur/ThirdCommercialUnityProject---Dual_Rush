@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   perkName: Iron Will
   description: Extend the post-hit invincibility window by 0.3 seconds.
-  icon: {fileID: 21300000, guid: 3b8cf5c82aa953c49adfba0da139934c, type: 3}
+  icon: {fileID: 21300000, guid: 72be9bd43418da247b9f76126bb1cfb3, type: 3}
   category: 2
   moveSpeedAdd: 0
   jumpForceAdd: 0

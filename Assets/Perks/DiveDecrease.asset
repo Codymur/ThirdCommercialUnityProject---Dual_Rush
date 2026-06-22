@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   perkName: Diving decrease
   description: Diving timer gets decreased 10%
-  icon: {fileID: 21300000, guid: 76f6aca465c061243a9d064e8d3129b2, type: 3}
+  icon: {fileID: 21300000, guid: cc283df1f5c43f04e98345223912391c, type: 3}
   category: 0
   moveSpeedAdd: 0
   jumpForceAdd: 0

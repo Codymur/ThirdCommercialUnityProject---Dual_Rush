@@ -94,7 +94,12 @@ public class PlayerHealth : Target
     private IEnumerator RestartCoroutine()
     {
         yield return new WaitForSeconds(respawnDelay);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+
+        LevelLoader loader = Object.FindFirstObjectByType<LevelLoader>();
+        if (loader != null)
+            loader.LoadLevel(SceneManager.GetActiveScene().buildIndex);
+        else
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     private IEnumerator InvincibilityCoroutine()

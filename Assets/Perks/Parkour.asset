@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   perkName: Parkour
   description: Dramatically sharper directional control while airborne.
-  icon: {fileID: 21300000, guid: 490723a2cc4df184893cad3c91268b80, type: 3}
+  icon: {fileID: 21300000, guid: 3a1bb3fbb7f55e4419ef594cb20e60c1, type: 3}
   category: 0
   moveSpeedAdd: 0
   jumpForceAdd: 0

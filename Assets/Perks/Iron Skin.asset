@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   perkName: Iron Skin
   description: 10% less incoming damage
-  icon: {fileID: 21300000, guid: 3b70d6c6451f8b344a02acfe3e33d30a, type: 3}
+  icon: {fileID: 21300000, guid: 7348c79f71545a741a44febd9a336fc6, type: 3}
   category: 2
   moveSpeedAdd: 0
   jumpForceAdd: 0

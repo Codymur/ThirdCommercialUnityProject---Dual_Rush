@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   perkName: Hair Trigger
   description: Fire rate increased by 25%.
-  icon: {fileID: 21300000, guid: ea331ab7232b84944aee8d2042e2104c, type: 3}
+  icon: {fileID: 21300000, guid: e09ba1c5ccae1ef45b6521654889336d, type: 3}
   category: 1
   moveSpeedAdd: 0
   jumpForceAdd: 0
