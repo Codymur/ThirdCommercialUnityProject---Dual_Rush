@@ -38,7 +38,7 @@ Developed solo by [Seymur Shiriyev](https://github.com/Codymur) — Steamworks p
 
 | | Current | Target (Launch) |
 |---|---|---|
-| **Perks** | 20 | 20 | ✅
+| **Perks** |✅ 20 |✅ 20 |
 | **Rooms** | 7 | 25 |
 | **Enemy Types** | 2 | 4 |
 | **Demo** | ✅ Playable prototype | ✅ Polished demo |
