@@ -38,7 +38,7 @@ Developed solo by [Seymur Shiriyev](https://github.com/Codymur) — Steamworks p
 
 | | Current | Target (Launch) |
 |---|---|---|
-| **Perks** | 6 | 20 |
+| **Perks** | 20 | 20 | ✅
 | **Rooms** | 7 | 25 |
 | **Enemy Types** | 2 | 4 |
 | **Demo** | ✅ Playable prototype | ✅ Polished demo |
@@ -145,17 +145,40 @@ Enemy counts and spawn configurations grow continuously across the entire run, n
 
 Perks are defined as `ScriptableObject` assets (`PerkSO`) and carry the following modifier categories:
 
+<div align="center">
+
 | Modifier | Stack Method |
 |---|---|
-| Movement Speed | Additive |
-| Jump Force | Additive |
-| Damage | Multiplicative |
-| Dive Cooldown | Multiplicative |
-| Health Regen on Kill | Additive |
+| 1 | Speedy Gonzales | Movement | +25% move speed |   
+| 2 | Diving Decrease | Movement | Dive cooldown −10% |
+| 3 | Hair Spring | Movement | Significantly higher jump |
+| 4 | Quick Dive | Movement | Dive cooldown −20% |
+| 5 | Parkour | Movement | 2.5× air control |
+| 6 | Killer | Combat | +25% damage |
+| 7 | Trigger Finger | Combat | +10% fire rate |
+| 8 | Hair Trigger | Combat | +25% fire rate |
+| 9 | Warhead | Combat | +15% damage |
+| 10 | Glass Cannon | Combat | +40% damage, but +20% damage taken |
+| 11 | Executioner | Combat | +50% damage to enemies below 35% HP |
+| 12 | Bloodrush | Combat | Each kill grants +20% fire rate for 3s |
+| 13 | Last Stand | Combat | +50% damage at or below 30% HP |
+| 14 | Adrenaline | Survival | Taking damage boosts move speed for 2.5s |
+| 15 | Iron Skin | Survival | −10% incoming damage |
+| 16 | Regeneration | Survival | +5% HP on every kill |
+| 17 | Resilience | Survival | −20% incoming damage |
+| 18 | Lifesteal | Survival | +8 HP on every kill |
+| 19 | Toughness | Survival | +25 max HP |
+| 20 | Iron Will | Survival | +0.3s post-hit invincibility |
 
 `PerkManager` recalculates all derived stats and pushes them to the relevant components whenever a new perk is added.
 
----
+<br/>
+
+    
+![Gameplay](Perk.gif)
+
+</div>
+
 
 ## Prerequisites
 
