@@ -13,14 +13,10 @@ using UnityEngine.AI;
 [RequireComponent(typeof(CapsuleCollider))]
 public class EnemyBase : Target
 {
-    [Header("Detection")]
-    public float detectionRange = 15f;
-    public float losePlayerRange = 20f;
-
     [Header("References")]
     public Transform player;              // Assign in Inspector or auto-found in Start
 
-    // ?? Internal refs ??????????????????????????????????????????????
+    // ── Internal refs ─────────────────────────────────────────────
     protected NavMeshAgent agent;
     protected Rigidbody rb;
     protected CapsuleCollider col;
@@ -28,21 +24,21 @@ public class EnemyBase : Target
 
     public event Action<EnemyBase> OnDeath;
 
-    // ?? State ??????????????????????????????????????????????????????
+    // ── State ─────────────────────────────────────────────────────
     public enum EnemyState { Idle, Alert, Attack }
     protected EnemyState state = EnemyState.Idle;
 
-    // Whether this enemy's room has been entered by the player.
+    // Whether this enemy's room door has been opened.
     // Enemies stay in Idle and cannot attack until this is true.
     protected bool isActivated = false;
 
-    // ?? Events � hook score system / perk triggers later ???????????
+    // ── Events ── hook score system / perk triggers later ─────────
     public System.Action<EnemyBase> OnEnemyDeath;
 
-    // ??????????????????????????????????????????????????????????????
+    // ──────────────────────────────────────────────────────────────
     protected override void Awake()
     {
-        base.Awake(); // runs Target.Awake() � saves renderer materials
+        base.Awake(); // runs Target.Awake() — saves renderer materials
 
         agent = GetComponent<NavMeshAgent>();
         rb = GetComponent<Rigidbody>();
@@ -68,33 +64,18 @@ public class EnemyBase : Target
                              $"Check that NavMeshSurface covers spawn point {transform.position}.", this);
     }
 
-    // ──────────────────────────────────────────────────────────────────────────
+    // ──────────────────────────────────────────────────────────────
     protected virtual void Update()
     {
         if (isDead || player == null || !isActivated) return;
 
-        float distToPlayer = Vector3.Distance(transform.position, player.position);
-
-        switch (state)
-        {
-            case EnemyState.Idle:
-                if ( distToPlayer <= detectionRange)
-                    state = EnemyState.Alert;
-                break;
-
-            case EnemyState.Alert:
-                if (distToPlayer > losePlayerRange)
-                    state = EnemyState.Idle;
-                break;
-
-            case EnemyState.Attack:
-                if (distToPlayer > losePlayerRange)
-                    state = EnemyState.Idle;
-                break;
-        }
+        // Once the door opens, leave Idle immediately and never go back.
+        // Subclasses drive their own Alert -> Attack transitions.
+        if (state == EnemyState.Idle)
+            state = EnemyState.Alert;
     }
 
-    // ??????????????????????????????????????????????????????????????
+    // ──────────────────────────────────────────────────────────────
     protected override void Die(Vector3 hitDirection)
     {
         if (isDead) return;
@@ -121,13 +102,13 @@ public class EnemyBase : Target
         foreach (Collider childCol in GetComponentsInChildren<Collider>())
             childCol.enabled = false;
 
-        // ?? RAGDOLL HOOK ??????????????????????????????????????????
+        // ── RAGDOLL HOOK ─────────────────────────────────────────
         // When you have a rigged model:
         //   1. Enable all Rigidbodies in the rig
         //   2. Disable the Animator
         //   3. Apply hitDirection force to the nearest bone
         //   Replace PlaceholderDeathPhysics() with EnableRagdoll()
-        // ?????????????????????????????????????????????????????????
+        // ────────────────────────────────────────────────────────
         PlaceholderDeathPhysics(hitDirection);
 
         Destroy(gameObject, deathFlashTime + 3f);
@@ -146,7 +127,7 @@ public class EnemyBase : Target
         rb.AddTorque(UnityEngine.Random.insideUnitSphere * 2f, ForceMode.Impulse);
     }
 
-    // ?? Future ragdoll method ??????????????????????????????????????
+    // ── Future ragdoll method ─────────────────────────────────────
     // void EnableRagdoll(Vector3 hitDirection)
     // {
     //     GetComponent<Animator>().enabled = false;
@@ -160,12 +141,12 @@ public class EnemyBase : Target
     public bool IsDead => isDead;
 
     /// <summary>
-    /// Called by <see cref="Room.ActivateEnemies"/> when the player enters the room trigger.
-    /// Until this is called the enemy stays permanently in Idle and will not detect or attack.
+    /// Called by <see cref="Room.ActivateEnemies"/> when the room's door is opened
+    /// past the activation angle. Until this is called the enemy stays permanently
+    /// in Idle and will not attack.
     /// </summary>
     public void Activate()
     {
         isActivated = true;
     }
-
 }

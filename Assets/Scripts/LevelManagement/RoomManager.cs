@@ -61,6 +61,18 @@ public class RoomManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Called by <see cref="FirstDoorCloser"/> when the player crosses out of the
+    /// FirstLevel tutorial room into slot 0 of the first procedural batch.
+    /// Slot 0 spawns its enemies on batch load but keeps them in forced Idle
+    /// until this call so they don't activate while the player is still looting.
+    /// </summary>
+    public void ActivateFirstProceduralRoom()
+    {
+        if (rooms[0] != null)
+            rooms[0].ActivateEnemies();
+    }
+
+    /// <summary>
     /// Called by RunManager when the player exits a non-perk room.
     /// Stashes the just-exited room for deferred destruction and wakes the
     /// enemies in the room the player is now entering.
@@ -169,6 +181,11 @@ public class RoomManager : MonoBehaviour
         for (int i = 0; i < RoomSlots; i++)
             InitialiseRoom(i);
 
+        // Wire each exit door to activate the NEXT room in the chain.
+        // Slot 0 of the first batch is intentionally left in forced Idle until
+        // FirstDoorCloser → ActivateFirstProceduralRoom() fires.
+        WireDoorTriggers(tailRoom);
+
         activeSlot = 0;
     }
 
@@ -214,6 +231,9 @@ public class RoomManager : MonoBehaviour
         RunManager.Instance.AdvancePastPerkRoom();
 
         // Build and align the new batch, chaining off the perk room's exitAnchor.
+        // LoadBatchRoutine's WireDoorTriggers call uses the perk room as tailRoom,
+        // wiring its exit door to the new batch's slot 0 so the perk room's
+        // door activation handover keeps working.
         yield return StartCoroutine(LoadBatchRoutine(startSlot: 0, tailRoom: perkRoom));
 
         // Hand the perk room to the deferred-destroy pipeline.
@@ -228,8 +248,6 @@ public class RoomManager : MonoBehaviour
     // Room cleared
     // ──────────────────────────────────────────────────────────────────────────
 
-    //////// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     void HandleRoomCleared(int slotIndex)
     {
         // For normal/mini-boss rooms the exit door is opened directly by Room itself.
@@ -238,7 +256,6 @@ public class RoomManager : MonoBehaviour
         if (nextSlot < RoomSlots && rooms[nextSlot] != null)
             rooms[nextSlot].WakeEnemies();
     }
-    //////// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // ──────────────────────────────────────────────────────────────────────────
     // Player exited a room
@@ -281,6 +298,40 @@ public class RoomManager : MonoBehaviour
         // Cascade: reveal perk pickup in the next room when this room is cleared.
         if (slotIndex < RoomSlots - 1)
             room.OnRoomCleared += () => HandleRoomCleared(slotIndex);
+    }
+
+    /// <summary>
+    /// Wires each exit door's <see cref="DoorActivationTrigger"/> to the room it
+    /// leads into. Within a batch, slot i's exit door → slot i+1. If a tailRoom
+    /// is provided (the perk room from the previous batch), its exit door is
+    /// wired to slot 0 of this batch.
+    /// The new batch's perk room (slot RoomSlots-1) is left unwired; the next
+    /// LoadNextBatchRoutine wires it when it runs as tailRoom.
+    /// </summary>
+    void WireDoorTriggers(Room tailRoom)
+    {
+        // Tail handover: previous batch's perk room door → this batch's slot 0.
+        if (tailRoom != null && tailRoom.exitDoor != null && rooms[0] != null)
+        {
+            DoorActivationTrigger tailTrigger = tailRoom.exitDoor.GetComponent<DoorActivationTrigger>();
+            if (tailTrigger != null)
+                tailTrigger.SetTargetRoom(rooms[0]);
+            else
+                Debug.LogWarning($"[RoomManager] Tail room '{tailRoom.name}' exit door is missing a DoorActivationTrigger.", tailRoom);
+        }
+
+        // Within-batch wiring: slot i's door → slot i+1's room.
+        for (int i = 0; i < RoomSlots - 1; i++)
+        {
+            if (rooms[i] == null || rooms[i].exitDoor == null) continue;
+            if (rooms[i + 1] == null) continue;
+
+            DoorActivationTrigger trigger = rooms[i].exitDoor.GetComponent<DoorActivationTrigger>();
+            if (trigger != null)
+                trigger.SetTargetRoom(rooms[i + 1]);
+            else
+                Debug.LogWarning($"[RoomManager] Room '{rooms[i].name}' exit door is missing a DoorActivationTrigger.", rooms[i]);
+        }
     }
 
     void AlignRooms(Room current, Room next)

@@ -34131,7 +34131,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 847
+  m_VersionIndex: 850
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -68292,7 +68292,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 847
+  m_VersionIndex: 850
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -70072,7 +70072,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 4672
+  m_VersionIndex: 4675
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -73286,7 +73286,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 7778
+  m_VersionIndex: 7781
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -73732,7 +73732,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1856220054476120181
 Transform:
   m_ObjectHideFlags: 0
@@ -73924,7 +73924,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.16666667
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: 1cb9d74f273767443afa31667d798089, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: 94cfeaf775c3d0a46a004730c653312a, type: 2}
   m_BuildHeightMesh: 0
 --- !u!114 &328266036191062924
 MonoBehaviour:
@@ -74139,6 +74139,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1757329795799162977, guid: e40794cb402eb3d4086035501b524191, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3425113984042663989}
+    - targetCorrespondingSourceObject: {fileID: 1757329795799162977, guid: e40794cb402eb3d4086035501b524191, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 708199831841712148}
   m_SourcePrefab: {fileID: 100100000, guid: e40794cb402eb3d4086035501b524191, type: 3}
 --- !u!4 &3513160683349829609 stripped
 Transform:
@@ -74196,3 +74199,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   passageTrigger: {fileID: 1756710375554371604}
   lingerLerpDuration: 0.25
+--- !u!114 &708199831841712148
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4379640644894732902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a695737bc2cd5a44a095303284af30c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  openAngleThreshold: 15
+  targetRoom: {fileID: 0}

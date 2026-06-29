@@ -7,6 +7,7 @@ Shader "MainMenu/PerkBackground"
         [HideInInspector] _ClickTime ("Click Time",  Float)  = 1000
         [HideInInspector] _MouseDown ("Mouse Down",  Float)  = 0
         [HideInInspector] _UnscaledTime ("Unscaled Time", Float) = 0
+        [HideInInspector] _Reveal    ("Reveal (appear/disappear)", Range(0,1)) = 1
         _Aspect         ("Aspect (w/h)",   Float)      = 1.7777
 
         [Enum(Native,0,Ice,1,Ember,2,Toxic,3,Synth,4,Steel,5,Mono,6,Gold,7,Vapor,8,Blood,9,Desert,10,NightVision,11,Cobalt,12,Thermal,13,Hazard,14,Military,15,Gunmetal,16,Rust,17,Sodium,18)]
@@ -27,6 +28,7 @@ Shader "MainMenu/PerkBackground"
             Name "Wallpaper"
             Tags { "LightMode"="UniversalForward" }
             Cull Off  ZWrite Off  ZTest LEqual
+            Blend SrcAlpha OneMinusSrcAlpha
 
             HLSLPROGRAM
             #pragma vertex   vert
@@ -43,6 +45,7 @@ Shader "MainMenu/PerkBackground"
                 float  _ClickTime;
                 float  _MouseDown;
                 float  _UnscaledTime;
+                float  _Reveal;
                 float  _Aspect;
                 float  _Palette;
                 float  _DitherStrength;
@@ -261,8 +264,24 @@ Shader "MainMenu/PerkBackground"
                 float2 clk = ((_ClickPos.xy - 0.5) * float2(_Aspect, 1.0)) / _Scale;
 
                 float3 col = scene(uv, m, clk, _ClickTime, _MouseDown);
+
+                // ── appear / disappear transition (driven by C# _Reveal 0..1) ──
+                // The wipe now controls ALPHA, not a black fill: unrevealed area is
+                // fully transparent, a bright dithered scan line rides the frontier,
+                // and _Reveal == 1 is fully opaque (normal rendering).
+                float feather  = 0.10;
+                float frontier = lerp(-feather, 1.0 + feather, saturate(_Reveal));
+                float vy       = IN.uv.y;
+                float reveal   = smoothstep(frontier + feather, frontier - feather, vy);
+                float band     = exp(-pow((vy - frontier) / (feather * 0.9), 2.0));
+                float midRun   = step(0.001, _Reveal) * step(_Reveal, 0.999);
+
+                col += pal[pcount - 1] * band * 0.6 * midRun;     // bright scan line on the frontier
                 col = quantize(col, ditherCoord, _DitherStrength, pal, pcount);
-                return half4(ToDisplayLinear(col), 1.0);
+
+                // Alpha follows the reveal → transparent where not yet revealed.
+                float alpha = saturate(reveal + band * 0.6 * midRun);
+                return half4(ToDisplayLinear(col), alpha);
             }
             ENDHLSL
         }

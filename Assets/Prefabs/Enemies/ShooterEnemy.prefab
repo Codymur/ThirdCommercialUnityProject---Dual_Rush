@@ -27,11 +27,11 @@ Transform:
   m_GameObject: {fileID: 1831940435422630602}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.70710677, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 1.546, z: 0.187}
-  m_LocalScale: {x: 0.2884235, y: 0.18698667, z: 0.47177643}
+  m_LocalPosition: {x: 0, y: 0.15657203, z: 0.28495368}
+  m_LocalScale: {x: 0.43950444, y: 0.24931557, z: 0.7189006}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 404167362273253874}
+  m_Father: {fileID: 6621420789728171472}
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!33 &7707971452540134565
 MeshFilter:
@@ -121,7 +121,6 @@ Transform:
   m_LocalScale: {x: 0.85, y: 0.75, z: 0.85}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2026867368748062113}
   - {fileID: 6621420789728171472}
   - {fileID: 327499428493557824}
   - {fileID: 7397687178307013847}
@@ -271,8 +270,6 @@ MonoBehaviour:
   deathFlashTime: 0.1
   deathForce: 5
   deathUpwardForce: 2
-  detectionRange: 15
-  losePlayerRange: 20
   player: {fileID: 0}
   attackRange: 12
   backupRange: 4
@@ -317,7 +314,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 1.428571, z: 0}
   m_LocalScale: {x: 0.656247, y: 0.75, z: 0.656247}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 2026867368748062113}
   m_Father: {fileID: 404167362273253874}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &2862898256707356322
@@ -392,7 +390,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 0.57
   m_Center: {x: 0, y: -0.0000000074505815, z: 0}
 --- !u!114 &7566694170064482459
 MonoBehaviour:

@@ -1,16 +1,16 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
 
 /// <summary>
 /// Shooter Enemy
-/// � Stays at range, moves laterally, fires in bursts
-/// � Backs away if player gets too close
-/// � Dies to anything via TakeDamage(amount, hitDirection)
+/// — Once activated, moves into firing range, then strafes and shoots in bursts
+/// — Backs away if player gets too close
+/// — Dies to anything via TakeDamage(amount, hitDirection)
 /// </summary>
 public class ShooterEnemy : EnemyBase
 {
     [Header("Shooting")]
-    public float attackRange = 12f;
+    public float attackRange = 12f;   // Preferred firing distance (not detection)
     public float backupRange = 4f;    // Backs up if player closer than this
     public float damage = 10f;
     public int bulletsPerBurst = 3;
@@ -23,10 +23,10 @@ public class ShooterEnemy : EnemyBase
 
     [Header("Bullet")]
     public GameObject bulletPrefab;         // Assign a simple sphere prefab
-    public Transform firePoint;            // Assign an empty on the capsule
+    public Transform firePoint;             // Assign an empty on the capsule
     public float bulletSpeed = 20f;
 
-    // ?? Internal ???????????????????????????????????????????????????
+    // ── Internal ──────────────────────────────────────────────────
     float burstTimer = 0f;
     float strafeTimer = 0f;
     int strafeDirection = 1;   // 1 or -1
@@ -34,7 +34,7 @@ public class ShooterEnemy : EnemyBase
     int shotsRemaining = 0;
     float shotTimer = 0f;
 
-    // ??????????????????????????????????????????????????????????????
+    // ──────────────────────────────────────────────────────────────
     protected override void Start()
     {
         base.Start();
@@ -44,23 +44,23 @@ public class ShooterEnemy : EnemyBase
         burstTimer = 1.5f;
     }
 
-    // ??????????????????????????????????????????????????????????????
+    // ──────────────────────────────────────────────────────────────
     protected override void Update()
     {
-        base.Update(); // handles state transitions
-        if (isDead || player == null) return;
+        base.Update(); // handles Idle -> Alert transition on activation
+        if (isDead || player == null || !isActivated) return;
 
         float dist = Vector3.Distance(transform.position, player.position);
 
         switch (state)
         {
             case EnemyState.Idle:
-                // Stand still
+                // Pre-activation only
                 agent.ResetPath();
                 break;
 
             case EnemyState.Alert:
-                // Move toward player until in attack range
+                // Move toward player until in firing range
                 agent.SetDestination(player.position);
                 if (dist <= attackRange)
                     state = EnemyState.Attack;
@@ -73,7 +73,7 @@ public class ShooterEnemy : EnemyBase
         }
     }
 
-    // ??????????????????????????????????????????????????????????????
+    // ──────────────────────────────────────────────────────────────
     void HandleAttackMovement(float dist)
     {
         // Always face the player
@@ -93,7 +93,7 @@ public class ShooterEnemy : EnemyBase
             return;
         }
 
-        // Strafe laterally � change direction periodically
+        // Strafe laterally — change direction periodically
         strafeTimer -= Time.deltaTime;
         if (strafeTimer <= 0f)
         {
@@ -105,7 +105,7 @@ public class ShooterEnemy : EnemyBase
         agent.SetDestination(strafeTarget);
     }
 
-    // ??????????????????????????????????????????????????????????????
+    // ──────────────────────────────────────────────────────────────
     void HandleShooting(float dist)
     {
         if (dist > attackRange) return;
@@ -140,18 +140,17 @@ public class ShooterEnemy : EnemyBase
         }
     }
 
-    // ??????????????????????????????????????????????????????????????
+    // ──────────────────────────────────────────────────────────────
     void FireBullet()
     {
         if (firePoint == null || bulletPrefab == null)
         {
-            // No prefab set up yet � raycast fallback for early testing
+            // No prefab set up yet — raycast fallback for early testing
             RaycastHit hit;
             if (Physics.Raycast(transform.position + Vector3.up * 0.2f,
                                 (player.position - transform.position).normalized,
                                 out hit, attackRange))
             {
-                // Try to damage whatever got hit
                 Target t = hit.collider.GetComponentInParent<Target>();
                 if (t != null) t.TakeDamage(damage);
             }

@@ -195,6 +195,9 @@ public class GunController : MonoBehaviour
                     rusherEnemyRef.TakeDamage(rusherEnemyRef.health, FPScam.transform.forward);
                 if (shooterEnemeyRef != null)
                     shooterEnemeyRef.TakeDamage(shooterEnemeyRef.health, FPScam.transform.forward);
+                Destroy(enemyHeadShotRef.gameObject);
+                //MeshRenderer headMeshRenderer = enemyHeadShotRef.GetComponent<MeshRenderer>();
+                //headMeshRenderer.material = null;
             }
             else if (target == null)
             {

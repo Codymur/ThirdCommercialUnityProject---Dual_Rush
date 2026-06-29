@@ -3,8 +3,8 @@ using UnityEngine.AI;
 
 /// <summary>
 /// Rusher Enemy
-/// - Charges directly at the player on detection
-/// - No shooting - pure melee threat
+/// - Charges directly at the player once activated
+/// - No shooting — pure melee threat
 /// - Tankier than ShooterEnemy
 /// - Kick, throw, dive impact all kill it via TakeDamage()
 /// </summary>
@@ -15,7 +15,7 @@ public class RusherEnemy : EnemyBase
     public float meleeRange = 1.8f;
     public float meleeDamage = 20f;
     public float meleeCooldown = 1.2f;
-    public float chargeWindup = 0.6f;  // Brief pause before full charge - readable tell
+    public float chargeWindup = 0.6f;  // Brief pause before full charge — readable tell
 
     // Internal state
     float meleeTimer = 0f;
@@ -25,20 +25,40 @@ public class RusherEnemy : EnemyBase
     // Radius used to search for the nearest NavMesh point when the agent is off-mesh.
     private const float NavMeshWarpSearchRadius = 3f;
 
+    // How far above/below the player we still accept a valid NavMesh point when
+    // projecting their position down onto the mesh (covers an airborne player).
+    private const float DestinationSampleHeight = 4f;
+
     protected override void Start()
     {
         base.Start();
 
-        // Rushers are tankier - override default Target health
-        health = 30f;
+        // Rushers are tankier — override default Target health
+        health = 20f;
         agent.speed = chargeSpeed;
-        agent.angularSpeed = 360f;           // Turns fast - hard to juke
+        agent.angularSpeed = 360f;           // Turns fast — hard to juke
         agent.stoppingDistance = meleeRange * 0.8f;
+
+        // Charger must never ease toward its destination. autoBraking (on by
+        // default) decelerates the agent as it nears its target, and since the
+        // target is the player, it crawls whenever it catches up.
+        agent.autoBraking = false;
+
+        // Stop the rusher's solid capsule from physically grinding against the
+        // player's capsule at melee range. IgnoreCollision removes only the
+        // depenetration contact between this pair — raycasts and spherecasts are
+        // unaffected, so kick/dive detection and melee knockback still work.
+        if (player != null)
+        {
+            Collider playerCol = player.GetComponent<Collider>();
+            if (playerCol != null && col != null)
+                Physics.IgnoreCollision(col, playerCol, true);
+        }
     }
 
     protected override void Update()
     {
-        base.Update(); // handles Idle -> Alert -> Attack transitions
+        base.Update(); // handles Idle -> Alert transition on activation
         if (isDead || player == null || !isActivated) return;
 
         float dist = Vector3.Distance(transform.position, player.position);
@@ -46,15 +66,15 @@ public class RusherEnemy : EnemyBase
         switch (state)
         {
             case EnemyState.Idle:
+                // Pre-activation only — base.Update flips us to Alert
+                // the moment the door opens.
                 agent.ResetPath();
-                // Clear windup state when returning to Idle so the next
-                // detection cycle always starts a clean full-duration tell.
                 isWindingUp = false;
                 windupTimer = 0f;
                 break;
 
             case EnemyState.Alert:
-                // Brief windup before first charge - visual tell for the player
+                // Brief windup before first charge — visual tell for the player
                 if (!isWindingUp)
                 {
                     isWindingUp = true;
@@ -71,50 +91,48 @@ public class RusherEnemy : EnemyBase
                 break;
 
             case EnemyState.Attack:
-                HandleCharge(dist);
+                HandleCharge();
                 HandleMelee(dist);
                 break;
         }
     }
 
     /// <summary>
-    /// Moves the agent toward the player each frame.
-    /// Includes a NavMesh warp fallback for agents that spawned off-mesh
-    /// (common when a spawn point sits outside the NavMeshSurface bounds).
+    /// Drives the agent straight at the player every frame.
+    /// Re-pathing each frame (no throttle, no pathPending gate) keeps the agent
+    /// continuously moving — throttling the destination is what caused the agent
+    /// to reach a stale endpoint and stop while the player was moving.
     /// </summary>
-    void HandleCharge(float dist)
+    void HandleCharge()
     {
-        // Guard: if the agent is not on any NavMesh surface, try to recover by
-        // warping it to the nearest valid position. This is the most common
-        // reason a rusher silently refuses to move - SetDestination returns false
-        // without any console error when isOnNavMesh is false.
+        // Guard: if the agent fell off the NavMesh, warp it back to the nearest
+        // valid point. SetDestination silently fails when isOnNavMesh is false.
         if (!agent.isOnNavMesh)
         {
-            if (NavMesh.SamplePosition(transform.position, out NavMeshHit hit, NavMeshWarpSearchRadius, NavMesh.AllAreas))
+            if (NavMesh.SamplePosition(transform.position, out NavMeshHit warpHit, NavMeshWarpSearchRadius, NavMesh.AllAreas))
             {
-                agent.Warp(hit.position);
-                Debug.LogWarning($"[RusherEnemy] '{name}' was off NavMesh — warped to nearest point {hit.position}. " +
-                                 $"Check that the NavMeshSurface in this room covers spawn point {transform.position}.", this);
+                agent.Warp(warpHit.position);
+                Debug.LogWarning($"[RusherEnemy] '{name}' was off NavMesh — warped to {warpHit.position}. " +
+                                 $"Check that the NavMeshSurface covers spawn point {transform.position}.", this);
             }
             else
             {
                 Debug.LogError($"[RusherEnemy] '{name}' is off NavMesh and no point found within {NavMeshWarpSearchRadius}m. " +
-                               $"Spawn position: {transform.position}. Expand the NavMeshSurface bounds to include all spawn points.", this);
+                               $"Spawn position: {transform.position}. Expand the NavMeshSurface bounds.", this);
                 return;
             }
         }
 
-        // Always charge directly at player - no strafing, no backing up.
-        // This makes it readable and gives the player a fair chance to dive/kick.
-        if (!agent.SetDestination(player.position))
-        {
-            Debug.LogWarning($"[RusherEnemy] '{name}' SetDestination failed. " +
-                             $"The player may be on a disconnected NavMesh island — " +
-                             $"check that room NavMeshSurfaces overlap at doorways.", this);
-        }
+        // Project the player's position onto the NavMesh so an airborne player
+        // still gives a reachable target point on the floor below them.
+        Vector3 targetPoint = player.position;
+        if (NavMesh.SamplePosition(player.position, out NavMeshHit destHit, DestinationSampleHeight, NavMesh.AllAreas))
+            targetPoint = destHit.position;
+
+        agent.SetDestination(targetPoint);
 
         // Face player
-        Vector3 lookDir = (player.position - transform.position).normalized;
+        Vector3 lookDir = player.position - transform.position;
         lookDir.y = 0f;
         if (lookDir != Vector3.zero)
         {

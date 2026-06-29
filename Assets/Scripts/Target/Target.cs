@@ -56,6 +56,7 @@ public class Target : MonoBehaviour
 
         foreach (Renderer rend in renderers)
         {
+            if (rend.TryGetComponent<EnemyHeadShot>(out _)) continue;   // ADDED
             Material[] mats = new Material[rend.materials.Length];
             for (int i = 0; i < mats.Length; i++)
                 mats[i] = flashMaterial;
@@ -65,7 +66,13 @@ public class Target : MonoBehaviour
         yield return new WaitForSeconds(flashDuration);
 
         for (int i = 0; i < renderers.Length; i++)
+        {
+            if (renderers[i] == null) continue;
+            if (renderers[i].TryGetComponent<EnemyHeadShot>(out _)) continue;
             renderers[i].materials = defaultMaterial[i];
+
+        }
+            
 
         isFlashing = false;
     }

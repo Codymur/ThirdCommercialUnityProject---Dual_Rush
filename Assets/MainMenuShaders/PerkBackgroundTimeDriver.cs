@@ -3,24 +3,37 @@ using UnityEngine;
 [RequireComponent(typeof(Renderer))]
 public class PerkBackgroundTimeDriver : MonoBehaviour
 {
-    // If you're driving a UI Image material, swap Renderer for MeshRenderer
-    // or use a MaterialPropertyBlock on a RawImage's material reference
     [SerializeField] private Renderer _target;
-    [SerializeField] private Material _material; // assign if not using Renderer
+    [SerializeField] private Material _material; // assign to force a specific material
 
     private static readonly int UnscaledTimeProp = Shader.PropertyToID("_UnscaledTime");
 
-    private void Awake()
+    private float _origin;
+
+    /// <summary>The exact material instance this driver writes to — share this everywhere.</summary>
+    public Material ActiveMaterial { get { EnsureMaterial(); return _material; } }
+
+    private void EnsureMaterial()
     {
-        // Prefer explicit material slot; fall back to Renderer's sharedMaterial
-        if (_material == null && _target != null)
-            _material = _target.material; // creates an instance automatically
+        if (_material != null) return;
+        if (_target == null) _target = GetComponent<Renderer>();
+        if (_target != null) _material = _target.material;   // renderer's instanced material
     }
 
-    // Update() still fires when Time.timeScale == 0
+    private void Awake() { EnsureMaterial(); }
+
+    // Reset the clock every time the background is shown.
+    private void OnEnable()
+    {
+        EnsureMaterial();
+        _origin = Time.unscaledTime;
+        if (_material != null) _material.SetFloat(UnscaledTimeProp, 0f);
+    }
+
+    // Update() fires even at Time.timeScale == 0, and unscaledTime ignores timeScale.
     private void Update()
     {
         if (_material != null)
-            _material.SetFloat(UnscaledTimeProp, Time.unscaledTime);
+            _material.SetFloat(UnscaledTimeProp, Time.unscaledTime - _origin);
     }
 }

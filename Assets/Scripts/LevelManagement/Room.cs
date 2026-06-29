@@ -130,9 +130,11 @@ public class Room : MonoBehaviour
     }
 
     /// <summary>
-    /// Called by <see cref="EnemyActivationTrigger"/> when the player enters the room's
-    /// ActivateEnemies trigger collider. All alive enemies transition from forced Idle to
-    /// active detection and can now attack.
+    /// Called by the previous room's <see cref="DoorActivationTrigger"/> when the
+    /// player pushes that room's exit door open. All alive enemies in this room
+    /// transition from forced Idle to active detection and can now attack.
+    /// For the very first room of a run, RoomManager calls this directly on
+    /// batch load since there is no preceding door.
     /// </summary>
     public void ActivateEnemies()
     {

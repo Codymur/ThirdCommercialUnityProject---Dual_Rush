@@ -35363,9 +35363,9 @@ Light:
   serializedVersion: 11
   m_Type: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1.7
+  m_Intensity: 4
   m_Range: 10
-  m_SpotAngle: 86.80653
+  m_SpotAngle: 126.887375
   m_InnerSpotAngle: 65.98133
   m_CookieSize: 10
   m_Shadows:
@@ -38690,6 +38690,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1757329795799162977, guid: e40794cb402eb3d4086035501b524191, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3425113984042663989}
+    - targetCorrespondingSourceObject: {fileID: 1757329795799162977, guid: e40794cb402eb3d4086035501b524191, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2801585882118686946}
   m_SourcePrefab: {fileID: 100100000, guid: e40794cb402eb3d4086035501b524191, type: 3}
 --- !u!4 &3513160683349829609 stripped
 Transform:
@@ -38747,3 +38750,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   passageTrigger: {fileID: 1756710375554371604}
   lingerLerpDuration: 0.25
+--- !u!114 &2801585882118686946
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4379640644894732902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a695737bc2cd5a44a095303284af30c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  openAngleThreshold: 15
+  targetRoom: {fileID: 0}
