@@ -28,7 +28,7 @@ Material:
     - _Aspect: 1.7777778
     - _BulletInterval: 0.6
     - _ClickScale: 1.8
-    - _ClickTime: 1.060646
+    - _ClickTime: 1.061878
     - _DitherStrength: 0.07
     - _MouseDown: 0
     - _Palette: 18.6
@@ -36,9 +36,9 @@ Material:
     - _Scale: 0.63
     - _Speed: 1
     m_Colors:
-    - _ClickPos: {r: 0.4995225, g: 0.38709685, b: 0, a: 0}
+    - _ClickPos: {r: 0.47276184, g: 0.33896396, b: 0, a: 0}
     - _DeadCards: {r: -1, g: -1, b: -1, a: -1}
     - _DeadCardsB: {r: -1, g: -1, b: -1, a: -1}
-    - _Mouse: {r: 0.5042973, g: 0.3837014, b: 0, a: 0}
+    - _Mouse: {r: 0.4689613, g: 0.33220732, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

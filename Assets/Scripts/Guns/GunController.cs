@@ -162,6 +162,8 @@ public class GunController : MonoBehaviour
             Target target = hit.collider.GetComponent<Target>();
             EnemyHeadShot enemyHeadShotRef = hit.collider.GetComponent<EnemyHeadShot>();
 
+            Debug.Log(hit.collider.name);
+
             if (target != null)
             {
                 PerkManager pm = PerkManager.Instance;
@@ -187,6 +189,13 @@ public class GunController : MonoBehaviour
                 hit.rigidbody.AddForce(-hit.normal * impactForce);
             }
 
+            if (hit.collider.GetComponent<LimbDismemberment>())
+            {
+                Debug.Log("LimbDismemberment component found on hit collider.");
+                LimbDismemberment limb = hit.collider.GetComponent<LimbDismemberment>();
+                limb.GetHit();
+            }
+
             if (enemyHeadShotRef != null)
             {
                 RusherEnemy rusherEnemyRef = hit.collider.GetComponentInParent<RusherEnemy>();
@@ -195,7 +204,7 @@ public class GunController : MonoBehaviour
                     rusherEnemyRef.TakeDamage(rusherEnemyRef.health, FPScam.transform.forward);
                 if (shooterEnemeyRef != null)
                     shooterEnemeyRef.TakeDamage(shooterEnemeyRef.health, FPScam.transform.forward);
-                Destroy(enemyHeadShotRef.gameObject);
+                //Destroy(enemyHeadShotRef.gameObject);
                 //MeshRenderer headMeshRenderer = enemyHeadShotRef.GetComponent<MeshRenderer>();
                 //headMeshRenderer.material = null;
             }

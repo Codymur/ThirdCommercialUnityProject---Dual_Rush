@@ -94,8 +94,23 @@ public class Room : MonoBehaviour
 
     void SpawnAt(GameObject prefab, Transform point)
     {
-        if (prefab == null) return;
-        GameObject go = Instantiate(prefab, point.position, point.rotation, transform);
+        if (prefab == null || point == null) return;
+
+        Vector3 spawnPos = point.position;
+        Quaternion spawnRot = point.rotation;
+
+        // Snap the spawn position onto the baked NavMesh. Spawn-point transforms are
+        // often authored flush with the floor, so spawning at the raw position clips
+        // the enemy capsule through the ground — and because EnemyBase makes the
+        // Rigidbody kinematic in Awake, physics never depenetrates it back up.
+        // Sampling lands the enemy on the walkable surface at the correct height, and
+        // also rescues a spawn point that sits slightly off-mesh (the "corner" spawn).
+        if (UnityEngine.AI.NavMesh.SamplePosition(spawnPos, out UnityEngine.AI.NavMeshHit hit, 3f, UnityEngine.AI.NavMesh.AllAreas))
+            spawnPos = hit.position;
+        else
+            Debug.LogWarning($"[Room] '{name}' spawn point at {point.position} is more than 3m from any NavMesh — enemy may spawn clipping geometry.", this);
+
+        GameObject go = Instantiate(prefab, spawnPos, spawnRot, transform);
         EnemyBase enemy = go.GetComponent<EnemyBase>();
         if (enemy != null)
         {

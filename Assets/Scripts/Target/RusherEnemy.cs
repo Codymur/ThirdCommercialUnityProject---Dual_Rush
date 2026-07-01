@@ -22,6 +22,12 @@ public class RusherEnemy : EnemyBase
     float windupTimer = 0f;
     bool isWindingUp = false;
 
+    // Cached player physics/health refs. The player rig splits these across
+    // child objects (Rigidbody on Player, Collider on PlayerObject), so a plain
+    // GetComponent on the player root returns null. Resolve them once here.
+    Target playerTarget;
+    Rigidbody playerRb;
+
     // Radius used to search for the nearest NavMesh point when the agent is off-mesh.
     private const float NavMeshWarpSearchRadius = 3f;
 
@@ -40,20 +46,60 @@ public class RusherEnemy : EnemyBase
         agent.stoppingDistance = meleeRange * 0.8f;
 
         // Charger must never ease toward its destination. autoBraking (on by
-        // default) decelerates the agent as it nears its target, and since the
-        // target is the player, it crawls whenever it catches up.
+        // default) decelerates the agent as it nears its target.
         agent.autoBraking = false;
 
-        // Stop the rusher's solid capsule from physically grinding against the
-        // player's capsule at melee range. IgnoreCollision removes only the
-        // depenetration contact between this pair — raycasts and spherecasts are
-        // unaffected, so kick/dive detection and melee knockback still work.
+        // Snap to full speed and recover instantly from any momentary avoidance
+        // slowdown, instead of ramping back up over the default acceleration.
+        agent.acceleration = 40f;
+
+        // High avoidance priority (lower number = higher priority). A charger
+        // should plow past a strafing shooter, not yield to it.
+        agent.avoidancePriority = 30;
+
+        // Resolve the player's split components once. The collider lives on the
+        // PlayerObject child, the Rigidbody on the Player root, and Target may be
+        // on either — search the whole hierarchy so none of them come back null.
         if (player != null)
         {
-            Collider playerCol = player.GetComponent<Collider>();
-            if (playerCol != null && col != null)
-                Physics.IgnoreCollision(col, playerCol, true);
+            playerTarget = player.GetComponentInChildren<Target>();
+            playerRb = player.GetComponentInChildren<Rigidbody>();
         }
+
+        // Stop the rusher's capsule from physically grinding against the player's
+        // capsule at melee range. The player's collider is on a child object, so
+        // we sweep every collider on both sides. Raycasts/spherecasts are
+        // unaffected, so kick/dive detection and melee knockback still work.
+        IgnoreCollisionsWithPlayer();
+    }
+
+    void IgnoreCollisionsWithPlayer()
+    {
+        if (player == null) return;
+
+        Collider[] myCols = GetComponentsInChildren<Collider>();
+        Collider[] playerCols = player.GetComponentsInChildren<Collider>();
+
+        foreach (Collider mine in myCols)
+        {
+            if (mine == null) continue;
+            foreach (Collider theirs in playerCols)
+            {
+                if (theirs == null) continue;
+                Physics.IgnoreCollision(mine, theirs, true);
+            }
+        }
+    }
+
+    /// <summary>
+    /// ResetPath throws if the agent is off the NavMesh or disabled (unlike
+    /// SetDestination, which fails silently). Guard every call so a single
+    /// off-mesh frame — at spawn or during room teardown — can't throw.
+    /// </summary>
+    void SafeResetPath()
+    {
+        if (agent != null && agent.enabled && agent.isOnNavMesh)
+            agent.ResetPath();
     }
 
     protected override void Update()
@@ -68,7 +114,7 @@ public class RusherEnemy : EnemyBase
             case EnemyState.Idle:
                 // Pre-activation only — base.Update flips us to Alert
                 // the moment the door opens.
-                agent.ResetPath();
+                SafeResetPath();
                 isWindingUp = false;
                 windupTimer = 0f;
                 break;
@@ -79,7 +125,7 @@ public class RusherEnemy : EnemyBase
                 {
                     isWindingUp = true;
                     windupTimer = chargeWindup;
-                    agent.ResetPath(); // Stand still during windup
+                    SafeResetPath(); // Stand still during windup
                 }
 
                 windupTimer -= Time.deltaTime;
@@ -100,11 +146,21 @@ public class RusherEnemy : EnemyBase
     /// <summary>
     /// Drives the agent straight at the player every frame.
     /// Re-pathing each frame (no throttle, no pathPending gate) keeps the agent
-    /// continuously moving — throttling the destination is what caused the agent
-    /// to reach a stale endpoint and stop while the player was moving.
+    /// continuously moving.
     /// </summary>
     void HandleCharge()
     {
+
+        // If we're mid-doorway-link, let the manual traversal finish first.
+        if (isTraversingLink) return;
+
+        // Step onto a link this frame? Hand off to the walking traversal.
+        if (agent.isOnNavMesh && agent.isOnOffMeshLink)
+        {
+            HandleLinkTraversal();
+            return;
+        }
+
         // Guard: if the agent fell off the NavMesh, warp it back to the nearest
         // valid point. SetDestination silently fails when isOnNavMesh is false.
         if (!agent.isOnNavMesh)
@@ -150,13 +206,11 @@ public class RusherEnemy : EnemyBase
         if (meleeTimer > 0f) return;
         if (dist > meleeRange) return;
 
-        // Hit player
-        Target playerTarget = player.GetComponent<Target>();
+        // Hit player (cached — resolved across the player hierarchy in Start)
         if (playerTarget != null)
             playerTarget.TakeDamage(meleeDamage);
 
         // Slight knockback on the player's Rigidbody
-        Rigidbody playerRb = player.GetComponent<Rigidbody>();
         if (playerRb != null)
         {
             Vector3 knockDir = (player.position - transform.position).normalized + Vector3.up * 0.3f;

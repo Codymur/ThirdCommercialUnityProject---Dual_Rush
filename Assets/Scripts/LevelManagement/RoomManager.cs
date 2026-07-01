@@ -318,6 +318,10 @@ public class RoomManager : MonoBehaviour
                 tailTrigger.SetTargetRoom(rooms[0]);
             else
                 Debug.LogWarning($"[RoomManager] Tail room '{tailRoom.name}' exit door is missing a DoorActivationTrigger.", tailRoom);
+
+            // Bridge the perk room's mesh to the new batch's slot 0 so enemies
+            // can cross the handover doorway too.
+            RoomNavLinker.Link(tailRoom, rooms[0]);
         }
 
         // Within-batch wiring: slot i's door → slot i+1's room.
@@ -331,6 +335,9 @@ public class RoomManager : MonoBehaviour
                 trigger.SetTargetRoom(rooms[i + 1]);
             else
                 Debug.LogWarning($"[RoomManager] Room '{rooms[i].name}' exit door is missing a DoorActivationTrigger.", rooms[i]);
+
+            // Bridge this room's mesh to the next room's mesh across the doorway.
+            RoomNavLinker.Link(rooms[i], rooms[i + 1]);
         }
     }
 
